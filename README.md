@@ -1,4 +1,4 @@
-# audio-tagger-ui
+# audio-tagger
 This is a Javascript application for audio tagging and management. 
 Javascript frontend application for audio tagging and management
 
