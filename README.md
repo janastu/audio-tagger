@@ -12,9 +12,7 @@ for adding attributes to the file, like Label, Name, Description, Tags.
   click and choose from tagcloud.
 
   List View:
-  Collection 1: will load data from Table (i)
-  Collection 2: will load data from Table (ii) 
-  Server API to get data: Pending..
+  Collection :  Server API to get data: http://da.server.pantoto.org/api/files
   Will contain the list of audio files, sorted by date-time of upload.
   Each list item will contain, File identifiers( like Device ID, Username and
   more..) with date-time of upload from collection 1
@@ -25,6 +23,8 @@ for adding attributes to the file, like Label, Name, Description, Tags.
   identification attributes in the Audio Play Area.
   Forward button - > onclick to share or forward content item
   More options - > on click show more options
+  To add tags, POST request to server api
+  http://da.server.pantoto.org/api/tags/id(mongodb)
 
 
   Tag Cloud:
