@@ -34,6 +34,10 @@ def admin():
   return render_template('admin.html')
 
 
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+  return render_template('upload_url.html')
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
   error = None
@@ -50,4 +54,4 @@ def login():
 
 
 if __name__ == '__main__' : 
-  app.run(debug=True)
+  app.run(debug=True, host= '0.0.0.0')

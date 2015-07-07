@@ -37,6 +37,7 @@ var audioPlayArea = Backbone.View.extend({
     },
     template: _.template($('#play-item-template').html()),
     render: function() {
+      console.log(this.model);
       this.$el.html('');
       this.$el.append(this.template(this.model.toJSON()));
       this.$tags = this.$el.find('input');
@@ -100,6 +101,7 @@ var dashboardview = Backbone.View.extend({
     "click .dislike-button" : "dislikeClick"
     },
     initialize: function(options) {
+      this.$sideMenu = $("#side-menu-wrap");
       this.collection.fetch({
         success: function(collection, response) {
           console.log(collection, response.files);
@@ -110,7 +112,6 @@ var dashboardview = Backbone.View.extend({
         console.log("Error!! Error!!", collection)
         }
       });
-
     },
     template: _.template($('#audio-item-template').html()),
     render: function() {
@@ -118,7 +119,9 @@ var dashboardview = Backbone.View.extend({
         this.$el.append(this.template(item.toJSON()));
       }, this);
        $('[data-toggle="tooltip"]').tooltip();
-
+       this.$sideMenu.BootSideMenu({
+         side: "right",
+         autoClose: true});
     },
     toggle: function() {
       if(this.$el.is(':visible')) {
@@ -197,13 +200,12 @@ var tagCloudView = Backbone.View.extend({
 });
 
 
-
 var appview = Backbone.View.extend({
     initialize: function(options) {
       console.log("hurrat");
       this.dashboard = new dashboardview({el:"#dashboard-body", collection: new audioCollection({ url: "http://da.pantoto.org/api/files"})});
       this.tagCloud = new tagCloudView({collection: new audioCollection({ url: "http://da.pantoto.org/api/files"})});
 
-    }
+    },
 });
 var audioTagApp = new appview;

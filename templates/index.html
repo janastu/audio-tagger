@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="static/css/theme.css">
     <link rel="stylesheet" href="static/css/jqcloud.css">
     <link rel="stylesheet" href="static/css/bootstrap-tagsinput.css">
+    <link rel="stylesheet" href="static/css/BootSideMenu.css">
   </head>
   <body>
     <header>
@@ -43,6 +44,11 @@
         id="navbar"
         class="navbar-collapse
         collapse">
+        <!--ul class="nav nav-tabs pull-left main-nav">
+            <li role="presentation" class="active"><a href="#audio-list">Home</a></li>
+              <li role="presentation"><a href="#admin-panel">Admin</a></li>
+                <li role="presentation"><a href="#upload-audio">Upload</a></li>
+              </ul-->
         <div class="pull-right user-state">
           <button type="button" class="btn">
             <span class="glyphicon glyphicon-envelope"></span>
@@ -84,14 +90,108 @@
     </nav>
     </header>
 
-    <section class="container col-md-3 col-lg-3">
+    <section class="container col-md-3 col-lg-3 col-sm-3">
     <div class="row"  id="tag-clouds">
       <div class="" id="tag-cloud">
       </div>
     </div>
     </section>
 
-    <section class="container col-md-5 col-lg-5" id="audio-list">
+    <section class="container col-md-5 col-lg-5 col-sm-5" id="audio-list">
+    <div id="side-menu-wrap" data-side="right">
+    <div class="row"  id="container admin-panel">
+      <div class="form-wrapper panel ">
+        {% if error %}
+        <div class="alert alert-danger"><b>error:</b> {{ error }}
+        </div>
+        {% endif %}
+        <div class="panel-heading"><a role="button" data-toggle="collapse"
+            href="#auth-form" aria-expanded="false"
+            aria-controls="auth-form"> To Authenticate: enter the phone number of the user,
+        to grant
+        permissions to set tags</a></div>
+      <div class="panel-body collapse" id="auth-form">
+        <form class="form-horizontal admin-forms" action=""
+          method="post">
+          <div class="form-group">
+            <label class="form-label"
+              for="phone-number">phone
+              number</label>
+            <div
+              class="controls">
+              <input
+              type="tel"
+              class="form-control"
+              id="phone-number"
+              name="usertel"
+              pattern='[\+]\d{2}[\-]\d{10}'
+              placeholder="Phone
+              Number">
+            </div>
+          </div>
+          <div
+            class="form-group">
+            <div
+              class="controls">
+              <button
+                type="submit"
+                class="btn
+                btn-primary
+                ">Submit</button>
+            </div>
+          </div>
+          <div
+            class="clearfix"></div>
+        </form>
+      </div>
+      </div>
+    </div>
+
+
+    <div class="row" id="container upload-audio">
+      <div class="form-wrapper panel">
+        {% if error %}
+        <div class="alert alert-danger"><b>error:</b> {{ error }}
+        </div>
+        {% endif %}
+        <div class="panel-heading"><a role="button" data-toggle="collapse"
+            href="#upload-form" aria-expanded="false"
+            aria-controls="upload-form">To Upload - enter the URL for the Audio
+            file</a></div>
+      <div class="panel-body collapse" id="upload-form">
+        <form class="form-horizontal admin-forms" action="http://da.pantoto.org"
+          method="post">
+          <div class="form-group">
+            <label class="form-label"
+              for="audiourl">URL for audio</label>
+            <div
+              class="controls">
+              <input
+              type="url"
+              class="form-control"
+              id="upload-input"
+              name="audiourl"
+              placeholder="Enter the url for the audio file">
+            </div>
+          </div>
+          <div
+            class="form-group">
+            <div
+              class="controls">
+              <button
+                type="submit"
+                class="btn
+                btn-primary
+                ">Submit</button>
+            </div>
+          </div>
+          <div
+            class="clearfix"></div>
+        </form>
+      </div>
+      </div>
+    </div>
+  </div>
     <div class="row">
       <div class="" id="dashboard">
         <div id="dashboard-body">
@@ -102,9 +202,10 @@
         <!--h4> Play Area </h4-->
       </div>
     </div>
-
     </section>
-    <section class="container col-md-4 col-lg-4" id="play-wrap">
+
+
+    <section class="container col-md-4 col-lg-4 col-sm-4" id="play-wrap">
     <div class="user-activity" >
       <div class="row user-activity-item" > 
         Todd suggested tags foo, bar, like for filename
@@ -116,9 +217,7 @@
         mike likes filename
       </div>
     </div>
-
     </section>
-
 
     <!--footer>
     <span> Copyright </span>
@@ -137,7 +236,7 @@
                 class="img-responsive custom-profile-pic">
               </div>
               <div class="feed-data">
-                <strong><%=filename%> uploaded on <% var d = new Date(uploadDate), // or d = new
+                <strong>uploaded on <% var d = new Date(uploadDate), // or d = new
                   locale = "en-us",
                   fragments = [
                   d.toLocaleString(locale,
@@ -157,15 +256,15 @@
                 <!-- Simple audio playback -->
                 <audio controls="controls">
                 Your browser does not support the <code>audio</code> element.
-                <source src="http://da.pantoto.org/api/static/<%=id%>"
-                type="audio/wav">
+                <source src=<%= url %> type="audio/wav">
                 </audio>
               </div>
               <div class="recent-feed-data" data-id="<%= id %>" >
                 <div class="feed-data">
-                  <strong class="suggest-tag-title"> Suggested tags </strong> <% for(var tag in tags) { %>
+                  <strong class="suggest-tag-title"> Suggested tags: <%=tags %> </strong> 
+                 <!-- <% for(var tag in tags) { %>
                    <span class="suggest-tag-item"><%= tags[tag] %></span>
-                  <% } %>
+                   <% } %>-->
                 </div>
               </div>
             </div>
@@ -182,13 +281,13 @@
                   title="Tag" data-toggle="tooltip"
                   >
                   <span class="glyphicon glyphicon-tags"></span>
-                  <span class="feed-data">4</span>
+                  <span class="feed-data"></span>
                 </button>
                 <button type="button" class="btn btn-default fav-button"
                   data-toggle="tooltip" data-placement="top"
                   title="Like" data-like="1">
                   <span class="glyphicon glyphicon-chevron-up">
-                    <span class="feed-data"></span>
+                    <span class="feed-data">1</span>
                     <div id="#hiddendiv"></div>
                   </span>
                 </button>
@@ -197,7 +296,7 @@
                   title="Dislike" data-dislike="3" >
                   <span class="glyphicon glyphicon-chevron-down">
                   </span>
-                  <span class="feed-data"></span>
+                  <span class="feed-data">1</span>
                 </button>
                 <button type="button" class="btn btn-default
                   share-button" `:w
@@ -205,7 +304,7 @@
                   title="Forward" data-forward="2" >
                   <span class="glyphicon glyphicon-retweet">
                   </span>
-                  <span class="feed-data"></span>
+                  <span class="feed-data">3</span>
                 </button>
                 <!--button type="button" class="btn btn-default
                 options-button"data-toggle="tooltip" data-placement="top"
@@ -252,13 +351,12 @@
               <!-- Simple audio playback -->
               <audio controls="controls">
               Your browser does not support the <code>audio</code> element.
-              <source src="http://da.pantoto.org/api/static/<%=id%>"
-              type="audio/wav">
+              <source src=<%=url%>      type="audio/wav">
               </audio>
             </div>
             <div class="recent-feed-data" >
               <div class="feed-data">
-                <strong> Name - <%= filename %></strong>
+                <strong>Suggested Tags: <%=tags %></strong>
               </div>
             </div>
           </div>
@@ -275,7 +373,7 @@
                 title="Tag" data-toggle="tooltip"
                 >
                 <span class="glyphicon glyphicon-tags"></span>
-                <span class="feed-data">4</span>
+                <span class="feed-data"></span>
               </button>
               <button type="button" class="btn btn-default fav-button"
                 data-toggle="tooltip" data-placement="top"
@@ -338,6 +436,8 @@
   <script src="static/js/bootstrap-tagsinput.min.js"> </script>
   <script src="static/js/jqcloud.js"> </script> <!-- for tag cloud
   visualization -->
+  <script src="static/js/BootSideMenu.js"> </script> <!-- bootstrap+jquery
+  plugin for side menu-->
   <script src="static/js/theme.js"> </script>
 </body>
 </html>
