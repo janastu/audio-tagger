@@ -57,7 +57,11 @@ var audioPlayArea = Backbone.View.extend({
       event.preventDefault();
      //this.tempTags = [this.$tags.tagsinput('items')]//{'suggest': [this.$tags.val()], 'User': '+91-9035290792'}
      //console.log(this.tempTags);
-     this.model.set('tags', [this.$tags.val()]);
+     this.newTags = this.$tags.val();
+     this.tags = this.model.get("tags");
+     this.tags.push(this.newTags);
+     this.model.set('tags', this.tags);
+     console.log(this.model);
      this.collection.add(this.model);
       console.log(this.model, this.collection, "playarea");
       $.ajax({
