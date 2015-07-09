@@ -31,13 +31,12 @@ var audioPlayArea = Backbone.View.extend({
     "click #cancel-form" : "toggle"
     },
     initialize: function(options) {
-      console.log(options);
+      this.model.on('change', this.render, this);
       this.collection = new audioCollection({ url: "http://da.pantoto.org/api/tags/"+this.model.get('id')});
       this.render();
     },
     template: _.template($('#play-item-template').html()),
     render: function() {
-      console.log(this.model);
       this.$el.html('');
       this.$el.append(this.template(this.model.toJSON()));
       this.$tags = this.$el.find('input');
@@ -76,7 +75,7 @@ var audioPlayArea = Backbone.View.extend({
         }
 
       });
-      
+      this.render();     
 
     },
     toggle: function() {

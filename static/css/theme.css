@@ -94,6 +94,8 @@ header {
 .recent-feed-data {
   border: 1px solid #ccc;
   cursor: pointer;
+  width: 278px;
+  overflow: auto;
 }
 /*end of audio list view */
 
@@ -173,7 +175,6 @@ styles inside side menu is not applied
   background-color: #fff;
   padding: 15px;
   border: 1px solid #ccc;
-  margin-left: -15px;
   height: 300px;
   width:200px;
 }
