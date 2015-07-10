@@ -38,7 +38,7 @@
         </button>
         <a
           class="navbar-brand custom-brand"
-          href="#">Audio Tagger</a>
+          href="{{index}}">Audio Tagger</a>
       </div>
       <div
         id="navbar"
@@ -46,9 +46,9 @@
         collapse">
         <!--ul class="nav nav-tabs pull-left main-nav">
             <li role="presentation" class="active"><a href="#audio-list">Home</a></li>
-              <li role="presentation"><a href="#admin-panel">Admin</a></li>
+              <li role="presentation"><a href="#tag-clouds">Admin</a></li>
                 <li role="presentation"><a href="#upload-audio">Upload</a></li>
-              </ul-->
+                </ul-->
         <div class="pull-right user-state">
           <button type="button" class="btn">
             <span class="glyphicon glyphicon-envelope"></span>
@@ -90,8 +90,8 @@
     </nav>
     </header>
 
-    <section class="container col-md-3 col-lg-3 col-sm-3">
-    <div class="row"  id="tag-clouds">
+    <section class="container col-md-3 col-lg-3 col-sm-3" id="tag-clouds">
+    <div class="row"  >
       <div class="" id="tag-cloud">
       </div>
     </div>
@@ -111,7 +111,7 @@
         to grant
         permissions to set tags</a></div>
       <div class="panel-body collapse" id="auth-form">
-        <form class="form-horizontal admin-forms" action=""
+        <form class="form-horizontal admin-forms" action="{{url_for('admin')}}"
           method="post">
           <div class="form-group">
             <label class="form-label"
@@ -124,7 +124,7 @@
               class="form-control"
               id="phone-number"
               name="usertel"
-              pattern='[\+]\d{2}[\-]\d{10}'
+              pattern='\d{10}'
               placeholder="Phone
               Number">
             </div>
