@@ -56,14 +56,14 @@
           <button type="button" class="btn">
             <span class="glyphicon glyphicon-globe"></span>
           </button>
-          <!--button type="button" class="btn">
+          <button type="button" class="btn">
             <span class="glyphicon glyphicon-option-horizontal"></span>
           </button>
-          <a href="/login" ><button
+          <!--a href="/login" ><button
               type="submit"
               class="btn
               btn-success" >
-              Log In</button>
+              Log In{{ user }}</button>
           </a-->
         </div>
         <!--form
@@ -99,35 +99,29 @@
 
     <section class="container col-md-5 col-lg-5 col-sm-5" id="audio-list">
     <div id="side-menu-wrap" data-side="right">
-    <div class="row"  id="container admin-panel">
-      <div class="form-wrapper panel ">
-       <!-- {% if error %}
-        <div class="alert alert-danger"><b>error:</b> {{ error }}
-        </div>
-        {% endif %}-->
-        <div class="panel-heading"><a role="button" data-toggle="collapse"
-            href="#auth-form" aria-expanded="false"
-            aria-controls="auth-form"> To Authenticate: enter the phone number of the user,
-        to grant
-        permissions to set tags</a></div>
-      <div class="panel-body collapse" id="auth-form">
-        <form class="form-horizontal admin-forms" action="{{url_for('admin')}}"
-          method="post">
-          <div class="form-group">
-            <label class="form-label"
-              for="phone-number">phone
-              number</label>
-            <div
-              class="controls">
-              <input
-              type="tel"
-              class="form-control"
-              id="phone-number"
-              name="usertel"
-              pattern='\d{10}'
-              placeholder="Phone
-              Number">
-            </div>
+      <div class="row"  id="container admin-panel">
+        <div class="form-wrapper panel ">
+          <!-- {% if error %}
+          <div class="alert alert-danger"><b>error:</b> {{ error }}
+          </div>
+          {% endif %}-->
+          <div class="panel-heading"><a role="button" data-toggle="collapse"
+              href="#auth-form" aria-expanded="false"
+              aria-controls="auth-form"> To Authenticate: enter the phone number of the user,
+              to grant
+              permissions to set tags</a></div>
+          <div class="panel-body collapse" id="auth-form">
+            <form class="form-horizontal admin-forms"
+              action=""
+              method="">
+              <div class="form-group">
+                <label class="form-label"
+                  for="phone-number">phone
+                  number</label>
+                <div class="controls">
+                  <input type="tel" class="form-control" id="phone-number"
+                  name="usertel" pattern='\d{10}' placeholder="Phone Number">
+                </div>
           </div>
           <div
             class="form-group">
@@ -159,30 +153,26 @@
             aria-controls="upload-form">To Upload - enter the URL for the Audio
             file</a></div>
       <div class="panel-body collapse" id="upload-form">
-        <form class="form-horizontal admin-forms" action="http://da.pantoto.org"
-          method="post">
+        <form class="form-horizontal admin-forms"
+          action=""
+          method="">
           <div class="form-group">
             <label class="form-label"
-              for="audiourl">URL for audio</label>
+              for="url">URL for audio</label>
             <div
               class="controls">
               <input
               type="url"
               class="form-control"
               id="upload-input"
-              name="audiourl"
+              name="url"
               placeholder="Enter the url for the audio file">
             </div>
           </div>
           <div
             class="form-group">
-            <div
-              class="controls">
-              <button
-                type="submit"
-                class="btn
-                btn-primary
-                ">Submit</button>
+            <div class="controls">
+              <button type="submit" class="btn btn-primary">Submit</button>
             </div>
           </div>
           <div
@@ -254,17 +244,20 @@
               col-xs-offset-2 post-card-body ">
               <div class="audio-file-default" >
                 <!-- Simple audio playback -->
-                <audio controls="controls">
+                <audio controls="controls" autobuffer="true" >
                 Your browser does not support the <code>audio</code> element.
-                <source src=<%= url %> type="audio/wav">
+                <source src=<%= url %> >
                 </audio>
               </div>
               <div class="recent-feed-data" data-id="<%= id %>" >
+                  <strong class="suggest-tag-title"> Suggested tags: </strong>
                 <div class="feed-data">
-                  <strong class="suggest-tag-title"> Suggested tags: <%=tags %> </strong> 
-                 <!-- <% for(var tag in tags) { %>
-                   <span class="suggest-tag-item"> User added <%= tags[tag] %>;</span>
-                   <% } %>-->
+                  <ul>
+                  <% for(var tag in tags) { %>
+                    <li><span class="suggest-tag-item"> User added <%=
+                      tags[tag] %></span></li>
+                    <% } %>
+                </ul>
                 </div>
               </div>
             </div>
@@ -355,8 +348,14 @@
               </audio>
             </div>
             <div class="recent-feed-data" >
+                <strong>Suggested Tags: </strong>
               <div class="feed-data">
-                <strong>Suggested Tags: <%=tags %></strong>
+                  <ul>
+                  <% for(var tag in tags) { %>
+                    <li><span class="suggest-tag-item"> User added <%=
+                      tags[tag] %></span></li>
+                    <% } %>
+                </ul>
               </div>
             </div>
           </div>
