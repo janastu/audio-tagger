@@ -68,10 +68,10 @@ header {
   margin-left: 15px;
 }
 .post-card-body{
-  width: 350px;
+  width: auto;
   margin: 0 auto;
-  margin-top: -60px;
   padding: 13px;
+  overflow: auto;
 }
 .post-card-footer {
   margin-left: 15px;
