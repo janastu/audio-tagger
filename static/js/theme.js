@@ -6,9 +6,10 @@ var audioCollection = Backbone.Collection.extend({
       console.log(options);
       this.url = options.url;
     },
-      comparator: function(model) {
+    comparator: function(model) {
       return -Date.parse(model.get("date"));   
     }
+
 
 
 });
@@ -18,9 +19,76 @@ var audioCollection = Backbone.Collection.extend({
 //should work on extending as we pipeline the upcoming features
 
 var loginView = Backbone.View.extend({
+  el: "",
+    events: {
+    },
+    initialize: function() {
+    },
+    render: function() {
+    }
+
 });
 
 
+//admin control panel
+//
+var adminDash = Backbone.View.extend({
+  el: "#auth-form",
+    events: {
+      "click button": "authSubmit"
+    },
+    initialize: function() {
+    },
+    render: function() {
+    },
+    authSubmit: function() {
+      $.ajax({
+        type: 'POST',
+        url: 'http://da.pantoto.org/api/user',
+        data: {'usertel': $('#phone-number').val()},
+        success: function(response) {
+          console.log(response);
+        },
+        error: function() {
+          console.log("caught error");
+        }
+
+      });
+
+    }
+});
+
+
+//upload audio url view
+var uploadUrl = Backbone.View.extend({
+  el: "#upload-form",
+    events: {
+      "click button" : "submitUrl"
+    }, 
+    initialize: function() {
+      this.url = $('#upload-input').val();
+      console.log(this.url);
+    },
+    render: function() {
+    },
+    submitUrl: function(event) {
+      event.preventDefault();
+      if(this.url){
+      $.ajax({
+        type: 'POST',
+        url: 'http://da.pantoto.org/api/url',
+        data: {'url': this.url },
+        success: function(response) {
+          console.log(response);
+        },
+        error: function() {
+          console.log("caught error");
+        }
+
+      });
+      }
+    }
+});
 //Audio play area - to listen audio
 //add tags, name category
 //TODO: should listen to tag clouds 
@@ -171,9 +239,10 @@ var feedFooterView = Backbone.View.extend({
 var tagCloudView = Backbone.View.extend({
   el: "#tag-cloud",
     events: {
-      "click span" : "addTag"
+      "click span" : "searchTag"
     },
   initialize: function() {
+    this.$tagClouds = $("#tag-clouds");
     this.collection.fetch({
       success: function(collection, response) {
         console.log(collection, response.files);
@@ -185,6 +254,7 @@ var tagCloudView = Backbone.View.extend({
       }
     });
   },
+    template: _.template($('#play-item-template').html()),
     render: function() {
       var wordArray = _.chain(this.collection.pluck('tags')).flatten().countBy().map(function(val, key) {
         return {text:key, weight:val};
@@ -195,7 +265,15 @@ var tagCloudView = Backbone.View.extend({
               });
       
     },
-    addTag: function(event) {
+    searchTag: function(event) {
+      event.preventDefault();
+        this.$tagClouds.append(this.template( this.collection.filter( function(item) {
+        if(_.contains(item.get('tags'), $(event.currentTarget).text())){
+         return item; 
+        }
+      })));
+       console.log(searchResults);
+
       console.log($(event.currentTarget).text());
       //new audioPlayArea({key: "tag", value: $(event.currentTarget).text()});
     }

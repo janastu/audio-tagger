@@ -30,6 +30,7 @@ def admin():
   error = None
   if request.method == 'POST':
     phone = request.form.get('usertel')
+    
     print repr(phone)
   return render_template('admin.html')
 
@@ -42,9 +43,9 @@ def upload():
 def login():
   error = None
   if request.method == 'POST':
-    user=requests.get('http://192.168.1.11:5000/user?', params={'phone':
+    user=requests.get('http://da.pantoto.org/api/user', params={'phone':
       '+91'+request.form.get('phonenumber'), 'key': request.form.get('passcode') })
-    return redirect(url_for('admin'))
+    return redirect(url_for('index'))
     print repr(user.json()) 
 
   #  the code below is executed if the request method

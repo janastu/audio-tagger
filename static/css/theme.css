@@ -95,7 +95,6 @@ header {
   border: 1px solid #ccc;
   cursor: pointer;
   width: 278px;
-  overflow: auto;
 }
 /*end of audio list view */
 
@@ -152,11 +151,14 @@ audio {
 }
 .suggest-tag-item {
   margin: 1px;
-  display: inline-block;
+  display: block;
   text-align: center;
   border-radius: 12px;
   padding: 5px;
   background-color: rgba(200, 200, 200, 0.5);
+}
+.feed-data ul li {
+  list-style: none;
 }
 .admin-forms {
   padding: 15px;
@@ -171,12 +173,14 @@ styles inside side menu is not applied
 /*end of tag cloud view*/
 
 /* User activity container audio-list-right-column*/
+#play-wrap .user-activity {
+  width: 200px;
+}
 .user-activity {
   background-color: #fff;
   padding: 15px;
   border: 1px solid #ccc;
   height: 300px;
-  width:200px;
 }
 .user-activity-item {
   padding:10px;
