@@ -97,7 +97,7 @@
     </div>
     </section>
 
-    <section class="container col-md-5 col-lg-5 col-sm-5" id="audio-list">
+    <section class="container col-md-4 col-lg-4 col-sm-4" id="audio-list">
     <!--div id="side-menu-wrap" data-side="right">
       <div class="row"  id="container admin-panel">
         <div class="form-wrapper panel ">
@@ -226,17 +226,8 @@
                 class="img-responsive custom-profile-pic">
               </div>
               <div class="feed-data">
-                <strong>uploaded on <% var d = new Date(uploadDate), // or d = new
-                  locale = "en-us",
-                  fragments = [
-                  d.toLocaleString(locale,
-                  { month: "long" }),
-                  d.getDate(),
-
-                  d.getFullYear()
-                  ]; 
-                  print(fragments[0]+' '+fragments[1]+','+' '+fragments[2]);
-                  %> </strong>  
+                <strong>uploaded on 
+                  <%=uploadDate %> </strong>  
               </div>
             </div>
 
@@ -267,7 +258,7 @@
           <!-- social network action, like, share, options -->
           <div class="row">
             <div class="col-md-offset-2 col-lg-offset-2 col-sm-offset-2
-              col-xs-offset-2 ">
+              ">
               <div class="post-card-footer">
                 <button type="button"  class="btn btn-default add-tag-button"
                   data-id="<%=id%>" data-placement="top"
@@ -324,7 +315,7 @@
               class="img-responsive custom-profile-pic">
             </div>
             <div class="feed-data">
-              <strong> Uploaded on <% var d = new Date(uploadDate), // or d = new
+              <strong> Uploaded on <% var d = new Date(uploadDate), 
                 locale = "en-us",
                 fragments = [
                 d.toLocaleString(locale,
@@ -365,7 +356,7 @@
         <!-- social network action, like, share, options -->
         <div class="row">
           <div class="col-md-offset-2 col-lg-offset-2 col-sm-offset-2
-            col-xs-offset-2 ">
+            ">
             <div class="post-card-footer">
               <button type="button"  class="btn btn-default add-tag-button"
                 data-id="<%=id%>" data-placement="top"
@@ -415,7 +406,7 @@
       <div class="clearfix"></div>
   </div>
   <div class="user-activity" >
-    <div class="row user-activity-item" > 
+    <!--div class="row user-activity-item" > 
       Todd suggested tags foo, bar, like for filename
     </div>
     <div class="row user-activity-item"> 
@@ -423,7 +414,7 @@
     </div>
     <div class="row user-activity-item"> 
       mike likes filename
-    </div>
+    </div-->
   </div>
 </script>
 
