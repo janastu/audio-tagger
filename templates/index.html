@@ -95,6 +95,10 @@
       <div class="" id="tag-cloud">
       </div>
     </div>
+    <div class="row">
+      <div id="search-results-container">
+      </div>
+    </div>
     </section>
 
     <section class="container col-md-4 col-lg-4 col-sm-4" id="audio-list">
@@ -188,8 +192,6 @@
 
         </div>
       </div>
-      <div id="search-results-container">
-      </div>
       <div id="audio-play-area">
         <!--h4> Play Area </h4-->
       </div>
@@ -237,7 +239,7 @@
               post-card-body ">
               <div class="audio-file-default" >
                 <!-- Simple audio playback -->
-                <audio controls="controls" autobuffer="true" >
+                <audio controls="controls" autobuffer="false"  >
                 Your browser does not support the <code>audio</code> element.
                 <source src=<%= url %> >
                 </audio>
@@ -317,17 +319,7 @@
               class="img-responsive custom-profile-pic">
             </div>
             <div class="feed-data">
-              <strong> Uploaded on <% var d = new Date(uploadDate), 
-                locale = "en-us",
-                fragments = [
-                d.toLocaleString(locale,
-                { month: "long" }),
-                d.getDate(),
-
-                d.getFullYear()
-                ]; 
-                print(fragments[0]+' '+fragments[1]+','+' '+fragments[2]);
-                %> </strong>  
+              <strong> Uploaded on <%=uploadDate%> </strong>  
             </div>
           </div>
 
@@ -335,9 +327,9 @@
             col-xs-offset-2 post-card-body ">
             <div class="audio-file-default" data-id="<%= id %>">
               <!-- Simple audio playback -->
-              <audio controls="controls">
+              <audio controls="controls" autobuffer="true" preload="auto">
               Your browser does not support the <code>audio</code> element.
-              <source src=<%=url%>      type="audio/wav">
+              <source src=<%=url%>      type="">
               </audio>
             </div>
             <div class="recent-feed-data" >
@@ -430,17 +422,7 @@
             class="img-responsive custom-profile-pic">
           </div>
           <div class="feed-data">
-            <strong> Uploaded on <% var d = new Date(uploadDate), 
-              locale = "en-us",
-              fragments = [
-              d.toLocaleString(locale,
-              { month: "long" }),
-              d.getDate(),
-
-              d.getFullYear()
-              ]; 
-              print(fragments[0]+' '+fragments[1]+','+' '+fragments[2]);
-              %> </strong>  
+            <strong> Uploaded on <%=uploadDate %> </strong>  
           </div>
         </div>
 

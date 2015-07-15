@@ -253,9 +253,9 @@ var searchTagView = Backbone.View.extend({
       if(audioTagApp.dashboard.$el.is(':visible')) {
         audioTagApp.dashboard.toggle();
       }
-      if(audioTagApp.dashboard.playArea.$el.is(':visible')) {
+      /*if(audioTagApp.dashboard.playArea.$el.is(':visible')) {
         audioTagApp.dashboard.playArea.toggle();
-      }
+      }*/
       _.each(this.searchResults, function(item) {
         $(this.el).append(this.template(item.toJSON()));
       }, this);
