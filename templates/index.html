@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="static/css/bootstrap-tagsinput.css">
     <link rel="stylesheet" href="static/css/BootSideMenu.css">
   </head>
-  <body>
+  <body id="audio-tag-app">
     <header>
     <nav class="navbar navbar-inverse navbar-fixed-top custom-nav">
     <div class="container">
@@ -38,7 +38,7 @@
         </button>
         <a id="homeAnchor"
           class="navbar-brand custom-brand"
-          href="">Audio Tagger</a>
+          href="javascript:void(0)">Audio Tagger</a>
       </div>
       <div
         id="navbar"
@@ -407,8 +407,8 @@
       </div>
       <div class="clearfix"></div>
   </div>
-  <div class="user-activity" >
-    <!--div class="row user-activity-item" > 
+  <!--div class="user-activity" >
+    <div class="row user-activity-item" > 
       Todd suggested tags foo, bar, like for filename
     </div>
     <div class="row user-activity-item"> 
@@ -446,14 +446,14 @@
 
         <div class="col-md-offset-2 col-lg-offset-2 col-sm-offset-2
           col-xs-offset-2 post-card-body ">
-          <div class="audio-file-default" data-id="<%= id %>">
+          <div class="audio-file-default" >
             <!-- Simple audio playback -->
             <audio controls="controls">
             Your browser does not support the <code>audio</code> element.
             <source src=<%=url%>      type="audio/wav">
             </audio>
           </div>
-          <div class="recent-feed-data" >
+          <div class="recent-feed-data" data-id="<%= id %>">
             <strong>Suggested Tags: </strong>
             <div class="feed-data">
               <ul>

@@ -124,20 +124,20 @@ var audioPlayArea = Backbone.View.extend({
      this.model.set('tags', this.tags);
      console.log(this.model);
      this.collection.add(this.model);
-      console.log(this.model, this.collection, "playarea");
-      $.ajax({
-        type: 'POST',
-        url: this.collection.url,
-        data: {'tags': this.model.get('tags')},
-        success: function(response) {
-          console.log(response);
-        },
-        error: function() {
-          console.log("caught error");
-        }
+     console.log(this.model, this.collection, "playarea");
+     $.ajax({
+       type: 'POST',
+       url: this.collection.url,
+       data: {'tags': this.model.get('tags')},
+       success: function(response) {
+         console.log(response);
+       },
+       error: function() {
+         console.log("caught error");
+       }
 
-      });
-      this.render();     
+     });
+     this.render();
 
     },
     toggle: function() {
@@ -219,14 +219,64 @@ var dashboardview = Backbone.View.extend({
 
 });
 
+var searchTagView = Backbone.View.extend({
+  el: "#search-results-container",
+    template: _.template($('#search-results-template').html()),
+   /* events: {
+      "click .recent-feed-data": "callPlayArea"
+    },*/
+    initialize: function(options) {
+      //_.bindAll(this, 'callPlayArea');
+      this.keyword = options.keyword || '';
+      this.collection = new audioCollection({ url: "http://da.pantoto.org/api/files"});
+      this.collection.fetch({
+        success: function(collection, response) {
+          console.log(collection, response.files);
+          collection.set(response.files);
+          audioTagApp.tagCloud.searchView.render();
 
-//Feed footer view to update state of Like, unlike and forward features
-//A model of boolean states of each feature"
-
-var feedFooterView = Backbone.View.extend({
-  className: ".post-card-footer"
-
+        },
+        error: function(collection) {
+          console.log("Error!! Error!!", collection)
+        }
+      });
+    },
+    render: function() {
+      $(this.el).html('');
+      this.searchResults = this.collection.filter( function(item) {
+        console.log(this.keyword);
+        if(_.contains(item.get('tags'), this.keyword )){
+          return item; 
+        }
+      }, this);
+      //bug - need to fix
+      if(audioTagApp.dashboard.$el.is(':visible')) {
+        audioTagApp.dashboard.toggle();
+      }
+      if(audioTagApp.dashboard.playArea.$el.is(':visible')) {
+        audioTagApp.dashboard.playArea.toggle();
+      }
+      _.each(this.searchResults, function(item) {
+        $(this.el).append(this.template(item.toJSON()));
+      }, this);
+    },
+    callPlayArea: function(event) {
+      this.playArea = new audioPlayArea({model: this.collection.get($(event.currentTarget).data("id"))});
+      //audioTagApp.playArea({model: this.collection.get($(event.currentTarget).data("id"))});
+      console.log("calling play area");
+    },
+    toggle: function() {
+      if(this.$el.is(':visible')) {
+        this.$el.hide();
+        console.log("visible");
+      }
+      else {
+        this.$el.show();
+        console.log("hidden");
+      }
+    }
 });
+
 
 //visualization for tags, user and other file attributes
 // to be extended with drag and drop to tagsinput field
@@ -237,8 +287,8 @@ var tagCloudView = Backbone.View.extend({
     },
   initialize: function() {
     this.$tagClouds = $("#tag-clouds");
-    this.$searchContainer = $("#search-results-container");
-    this.tagSearchTemplate = _.template($('#search-results-template').html());
+   // this.$searchContainer = $("#search-results-container");
+   // this.tagSearchTemplate = _.template($('#search-results-template').html());
     this.collection.fetch({
       success: function(collection, response) {
         console.log(collection, response.files);
@@ -263,32 +313,31 @@ var tagCloudView = Backbone.View.extend({
     },
     searchTag: function(event) {
       event.preventDefault();
-      this.$searchContainer.html('');
-      //bug - need to fix
-      audioTagApp.dashboard.toggle();
-        var searchResults = this.collection.filter( function(item) {
-        if(_.contains(item.get('tags'), $(event.currentTarget).text())){
-         return item; 
-        }
-      });
-        _.each(searchResults, function(item) {
-          console.log(item);
-          this.$searchContainer.append(this.tagSearchTemplate(item.toJSON()));
-        }, this);
 
-      console.log($(event.currentTarget).text());
-      //new audioPlayArea({key: "tag", value: $(event.currentTarget).text()});
+      this.searchView = new searchTagView({keyword : ($(event.currentTarget).text())});
     }
 
 });
 
-
 var appview = Backbone.View.extend({
-  tagName: "body",
+  el: "#audio-tag-app",
+  events:{
+    "click #homeAnchor": "callDashboard"
+  },
     initialize: function(options) {
+      _.bindAll(this, 'callDashboard');
+      this.render();
       console.log("hurrat");
+    },
+    render: function(){
       this.dashboard = new dashboardview({el:"#dashboard-body", collection: new audioCollection({ url: "http://da.pantoto.org/api/files"})});
       this.tagCloud = new tagCloudView({collection: new audioCollection({ url: "http://da.pantoto.org/api/files"})});
+      console.log("render");
+    },
+    callDashboard: function(event) {
+      if(audioTagApp.dashboard.$el.is(':hidden')) {
+      audioTagApp.dashboard.toggle();
+      }
     }
 });
 var audioTagApp = new appview;
