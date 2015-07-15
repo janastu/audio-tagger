@@ -36,9 +36,9 @@
           <span
             class="icon-bar"></span>
         </button>
-        <a
+        <a id="homeAnchor"
           class="navbar-brand custom-brand"
-          href="{{index}}">Audio Tagger</a>
+          href="">Audio Tagger</a>
       </div>
       <div
         id="navbar"
@@ -187,6 +187,8 @@
         <div id="dashboard-body">
 
         </div>
+      </div>
+      <div id="search-results-container">
       </div>
       <div id="audio-play-area">
         <!--h4> Play Area </h4-->
@@ -417,7 +419,55 @@
     </div-->
   </div>
 </script>
+<script type="text/template" id="search-results-template">
+  <div class="audio-feed">
+    <div class="row">
+      <div class="post-card">
 
+        <div class="post-card-header">
+          <div class="profile-image">
+            <img src="static/img/person-placeholder.jpg" alt="profile-pic"
+            class="img-responsive custom-profile-pic">
+          </div>
+          <div class="feed-data">
+            <strong> Uploaded on <% var d = new Date(uploadDate), 
+              locale = "en-us",
+              fragments = [
+              d.toLocaleString(locale,
+              { month: "long" }),
+              d.getDate(),
+
+              d.getFullYear()
+              ]; 
+              print(fragments[0]+' '+fragments[1]+','+' '+fragments[2]);
+              %> </strong>  
+          </div>
+        </div>
+
+        <div class="col-md-offset-2 col-lg-offset-2 col-sm-offset-2
+          col-xs-offset-2 post-card-body ">
+          <div class="audio-file-default" data-id="<%= id %>">
+            <!-- Simple audio playback -->
+            <audio controls="controls">
+            Your browser does not support the <code>audio</code> element.
+            <source src=<%=url%>      type="audio/wav">
+            </audio>
+          </div>
+          <div class="recent-feed-data" >
+            <strong>Suggested Tags: </strong>
+            <div class="feed-data">
+              <ul>
+                <% for(var tag in tags) { %>
+                  <li><span class="suggest-tag-item"> User added <%=
+                    tags[tag] %></span></li>
+                  <% } %>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div> <!-- end suggested tags container -->
+    </script>
   <script src="static/js/jquery.min.js"></script> <!-- jquery version
   1.11.3-->
   <script src="static/js/underscore-min.js"> </script>

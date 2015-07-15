@@ -111,12 +111,6 @@ var audioPlayArea = Backbone.View.extend({
       this.$tags.tagsinput();
       //TODO: should figure our how to get inputs and build array
 
-      /*if(this.key == "tag") {
-        this.tagHistory = [];
-        this.tagHistory.push(this.value);
-        this.$tags.val(this.tagHistory);
-        console.log(this.tagHistory);
-      }*/
 
     },
     //to get the tags value from DOM input and post to Server endpoint
@@ -243,6 +237,8 @@ var tagCloudView = Backbone.View.extend({
     },
   initialize: function() {
     this.$tagClouds = $("#tag-clouds");
+    this.$searchContainer = $("#search-results-container");
+    this.tagSearchTemplate = _.template($('#search-results-template').html());
     this.collection.fetch({
       success: function(collection, response) {
         console.log(collection, response.files);
@@ -267,12 +263,18 @@ var tagCloudView = Backbone.View.extend({
     },
     searchTag: function(event) {
       event.preventDefault();
-        this.$tagClouds.append(this.template( this.collection.filter( function(item) {
+      this.$searchContainer.html('');
+      //bug - need to fix
+      audioTagApp.dashboard.toggle();
+        var searchResults = this.collection.filter( function(item) {
         if(_.contains(item.get('tags'), $(event.currentTarget).text())){
          return item; 
         }
-      })));
-       console.log(searchResults);
+      });
+        _.each(searchResults, function(item) {
+          console.log(item);
+          this.$searchContainer.append(this.tagSearchTemplate(item.toJSON()));
+        }, this);
 
       console.log($(event.currentTarget).text());
       //new audioPlayArea({key: "tag", value: $(event.currentTarget).text()});
@@ -282,11 +284,11 @@ var tagCloudView = Backbone.View.extend({
 
 
 var appview = Backbone.View.extend({
+  tagName: "body",
     initialize: function(options) {
       console.log("hurrat");
       this.dashboard = new dashboardview({el:"#dashboard-body", collection: new audioCollection({ url: "http://da.pantoto.org/api/files"})});
       this.tagCloud = new tagCloudView({collection: new audioCollection({ url: "http://da.pantoto.org/api/files"})});
-
-    },
+    }
 });
 var audioTagApp = new appview;
