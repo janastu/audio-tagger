@@ -262,7 +262,7 @@ var searchTagView = Backbone.View.extend({
     },
     callPlayArea: function(event) {
       event.stopPropagation();
-      audioTagApp.tagCloud.searchView.toggle();
+      this.toggle();
       new audioPlayArea({model: this.collection.get($(event.currentTarget).data("id"))});
     },
     toggle: function() {
