@@ -171,7 +171,7 @@ var dashboardview = Backbone.View.extend({
         success: function(collection, response) {
           console.log(collection, response.files);
           collection.set(response.files);
-          audioTagApp.dashboard.render()
+          audioTagApp.dashboard.render();
         },
         error: function(collection) {
         console.log("Error!! Error!!", collection)
@@ -222,9 +222,9 @@ var dashboardview = Backbone.View.extend({
 var searchTagView = Backbone.View.extend({
   el: "#search-results-container",
     template: _.template($('#search-results-template').html()),
-   /* events: {
+    events: {
       "click .recent-feed-data": "callPlayArea"
-    },*/
+    },
     initialize: function(options) {
       //_.bindAll(this, 'callPlayArea');
       this.keyword = options.keyword || '';
@@ -261,9 +261,9 @@ var searchTagView = Backbone.View.extend({
       }, this);
     },
     callPlayArea: function(event) {
-      this.playArea = new audioPlayArea({model: this.collection.get($(event.currentTarget).data("id"))});
-      //audioTagApp.playArea({model: this.collection.get($(event.currentTarget).data("id"))});
-      console.log("calling play area");
+      event.stopPropagation();
+      audioTagApp.tagCloud.searchView.toggle();
+      new audioPlayArea({model: this.collection.get($(event.currentTarget).data("id"))});
     },
     toggle: function() {
       if(this.$el.is(':visible')) {
@@ -289,6 +289,7 @@ var tagCloudView = Backbone.View.extend({
     this.$tagClouds = $("#tag-clouds");
    // this.$searchContainer = $("#search-results-container");
    // this.tagSearchTemplate = _.template($('#search-results-template').html());
+    this.listenTo(this.collection, "change", this.render);
     this.collection.fetch({
       success: function(collection, response) {
         console.log(collection, response.files);
@@ -298,9 +299,8 @@ var tagCloudView = Backbone.View.extend({
       error: function(collection) {
         console.log("Error!! Error!!", collection)
       }
-    });
+    }, this);
   },
-    template: _.template($('#play-item-template').html()),
     render: function() {
       var wordArray = _.chain(this.collection.pluck('tags')).flatten().countBy().map(function(val, key) {
         return {text:key, weight:val};
@@ -337,6 +337,7 @@ var appview = Backbone.View.extend({
     callDashboard: function(event) {
       if(audioTagApp.dashboard.$el.is(':hidden')) {
       audioTagApp.dashboard.toggle();
+      audioTagApp.tagCloud.searchView.$el.html('');
       }
     }
 });
