@@ -44,7 +44,7 @@ var adminDash = Backbone.View.extend({
     authSubmit: function() {
       $.ajax({
         type: 'POST',
-        url: 'http://da-server.mesh/api/user',
+        url: 'http://da.chikkahaalkan-da.local/api/user',
         data: {'usertel': $('#phone-number').val()},
         success: function(response) {
           console.log(response);
@@ -76,7 +76,7 @@ var uploadUrl = Backbone.View.extend({
       if(this.url){
       $.ajax({
         type: 'POST',
-        url: 'http://da-server.mesh/api/url',
+        url: 'http://da.chikkahaalkan-da.local/api/url',
         data: {'url': this.url },
         success: function(response) {
           console.log(response);
@@ -100,7 +100,7 @@ var audioPlayArea = Backbone.View.extend({
     },
     initialize: function(options) {
       this.model.on('change', this.render, this);
-      this.collection = new audioCollection({ url: "http://da-server.mesh/api/tags/"+this.model.get('id')});
+      this.collection = new audioCollection({ url: "http://da.chikkahaalkan-da.local/api/tags/"+this.model.get('id')});
       this.render();
     },
     template: _.template($('#play-item-template').html()),
@@ -228,7 +228,7 @@ var searchTagView = Backbone.View.extend({
     initialize: function(options) {
       //_.bindAll(this, 'callPlayArea');
       this.keyword = options.keyword || '';
-      this.collection = new audioCollection({ url: "http://da-server.mesh/api/files"});
+      this.collection = new audioCollection({ url: "http://da.chikkahaalkan-da.local/api/files"});
       this.collection.fetch({
         success: function(collection, response) {
           console.log(collection, response.files);
@@ -330,8 +330,8 @@ var appview = Backbone.View.extend({
       console.log("hurrat");
     },
     render: function(){
-      this.dashboard = new dashboardview({el:"#dashboard-body", collection: new audioCollection({ url: "http://da-server.mesh/api/files"})});
-      this.tagCloud = new tagCloudView({collection: new audioCollection({ url: "http://da-server.mesh/api/files"})});
+      this.dashboard = new dashboardview({el:"#dashboard-body", collection: new audioCollection({ url: "http://da.chikkahaalkan-da.local/api/files"})});
+      this.tagCloud = new tagCloudView({collection: new audioCollection({ url: "http://da.chikkahaalkan-da.local/api/files"})});
       console.log("render");
     },
     callDashboard: function(event) {
