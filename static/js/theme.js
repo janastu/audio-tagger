@@ -44,7 +44,7 @@ var adminDash = Backbone.View.extend({
     authSubmit: function() {
       $.ajax({
         type: 'POST',
-        url: 'http://da.chikkahaalkan-da.local/api/user',
+        url: 'http://da.pantoto.org/api/user',
         data: {'usertel': $('#phone-number').val()},
         success: function(response) {
           console.log(response);
@@ -76,7 +76,7 @@ var uploadUrl = Backbone.View.extend({
       if(this.url){
       $.ajax({
         type: 'POST',
-        url: 'http://da.chikkahaalkan-da.local/api/url',
+        url: 'http://da.pantoto.org/api/url',
         data: {'url': this.url },
         success: function(response) {
           console.log(response);
@@ -100,13 +100,14 @@ var audioPlayArea = Backbone.View.extend({
     },
     initialize: function(options) {
       this.model.on('change', this.render, this);
-      this.collection = new audioCollection({ url: "http://da.chikkahaalkan-da.local/api/tags/"+this.model.get('id')});
+      this.collection = new audioCollection({ url: "http://da.pantoto.org/api/tags/"+this.model.get('id')});
       this.render();
     },
     template: _.template($('#play-item-template').html()),
     render: function() {
       this.$el.html('');
       this.$el.append(this.template(this.model.toJSON()));
+      $("body").scrollTop(0); //this.$el should do this, but unable to get it working
       this.$tags = this.$el.find('input');
       this.$tags.tagsinput();
       //TODO: should figure our how to get inputs and build array
@@ -119,6 +120,7 @@ var audioPlayArea = Backbone.View.extend({
      //this.tempTags = [this.$tags.tagsinput('items')]//{'suggest': [this.$tags.val()], 'User': '+91-9035290792'}
      //console.log(this.tempTags);
      this.newTags = this.$tags.val();
+     console.log(this.newTags);
      this.tags = this.model.get("tags");
      this.tags.push(this.newTags);
      this.model.set('tags', this.tags);
@@ -228,7 +230,7 @@ var searchTagView = Backbone.View.extend({
     initialize: function(options) {
       //_.bindAll(this, 'callPlayArea');
       this.keyword = options.keyword || '';
-      this.collection = new audioCollection({ url: "http://da.chikkahaalkan-da.local/api/files"});
+      this.collection = new audioCollection({ url: "http://da.pantoto.org/api/files"});
       this.collection.fetch({
         success: function(collection, response) {
           console.log(collection, response.files);
@@ -330,8 +332,8 @@ var appview = Backbone.View.extend({
       console.log("hurrat");
     },
     render: function(){
-      this.dashboard = new dashboardview({el:"#dashboard-body", collection: new audioCollection({ url: "http://da.chikkahaalkan-da.local/api/files"})});
-      this.tagCloud = new tagCloudView({collection: new audioCollection({ url: "http://da.chikkahaalkan-da.local/api/files"})});
+      this.dashboard = new dashboardview({el:"#dashboard-body", collection: new audioCollection({ url: "http://da.pantoto.org/api/files"})});
+      this.tagCloud = new tagCloudView({collection: new audioCollection({ url: "http://da.pantoto.org/api/files"})});
       console.log("render");
     },
     callDashboard: function(event) {

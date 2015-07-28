@@ -239,7 +239,7 @@
               post-card-body ">
               <div class="audio-file-default" >
                 <!-- Simple audio playback -->
-                <audio controls="controls" preload="metadata"  >
+                <audio controls="controls" preload="none"  >
                 Your browser does not support the <code>audio</code> element.
                 <source src=<%= url %> >
                 </audio>
@@ -329,7 +329,7 @@
               <!-- Simple audio playback -->
               <audio controls="controls" autobuffer="true" preload="auto">
               Your browser does not support the <code>audio</code> element.
-              <source src=<%=url%>      type="">
+              <source src=<%=url%>  >
               </audio>
             </div>
             <div class="recent-feed-data" >
@@ -394,7 +394,10 @@
   </div> <!-- end audio-feed -->
   <div class="row tag-editor">
       <div class="form-group">
-        <input type="text" data-role="tagsinput" class="form-control" id="add-tag" placeholder="Add Tags">
+        <input type="text" data-role="tagsinput" class="form-control"
+        id="add-tag" placeholder="Add Tags">
+        <!--select multiple data-role="tagsinput">
+        </select-->
         <button type="button" class="btn" id="submit-form"> Submit </button>
       </div>
       <div class="clearfix"></div>
@@ -430,9 +433,9 @@
           col-xs-offset-2 post-card-body ">
           <div class="audio-file-default" >
             <!-- Simple audio playback -->
-            <audio controls="controls">
+            <audio controls="controls"  preload="none">
             Your browser does not support the <code>audio</code> element.
-            <source src=<%=url%>      type="audio/wav">
+            <source src=<%=url%> >
             </audio>
           </div>
           <div class="recent-feed-data" data-id="<%= id %>">
