@@ -96,6 +96,8 @@ var audioPlayArea = Backbone.View.extend({
   el: "#audio-play-area",
     events: {
       "click #submit-form" : "submitForm",
+    "change input" : "emojiChange",
+    "click .suggest-tag-item" : "addTagViz",
     "click #cancel-form" : "toggle"
     },
     initialize: function(options) {
@@ -108,11 +110,23 @@ var audioPlayArea = Backbone.View.extend({
       this.$el.html('');
       this.$el.append(this.template(this.model.toJSON()));
       $("body").scrollTop(0); //this.$el should do this, but unable to get it working
+      //TODO: should figure our how to get inputs and build array
       this.$tags = this.$el.find('input');
       this.$tags.tagsinput();
-      //TODO: should figure our how to get inputs and build array
 
 
+    },
+
+    //Visual input for tags - emojione
+    emojiChange: function(event) {
+      console.log("need to complete this");
+    },
+    //Add tag bby click - Future features should have vizual tag input
+    //against the text tag input
+
+    addTagViz: function(event) {
+      event.preventDefault();
+      this.$el.find('input').val($(event.currentTarget).text().slice(11));
     },
     //to get the tags value from DOM input and post to Server endpoint
     submitForm: function(event) {
