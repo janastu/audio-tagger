@@ -242,7 +242,9 @@
                 <!-- Simple audio playback -->
                 <audio controls="controls" preload="none"  >
                 Your browser does not support the <code>audio</code> element.
-                <source src=<%= url %> >
+                <% var encodedUrl = encodeURIComponent(url)%>
+                <source src=<%=decodeURIComponent(encodedUrl).replace(' ',
+                '%20')%> >
                 </audio>
               </div>
               <div class="recent-feed-data" data-id="<%= id %>" >
@@ -330,7 +332,9 @@
               <!-- Simple audio playback -->
               <audio controls="controls" autobuffer="true" preload="auto">
               Your browser does not support the <code>audio</code> element.
-              <source src=<%=url%>  >
+                <% var encodedUrl = encodeURIComponent(url)%>
+                <source src=<%=decodeURIComponent(encodedUrl).replace(' ',
+                '%20')%> >
               </audio>
             </div>
             <div class="recent-feed-data" >
