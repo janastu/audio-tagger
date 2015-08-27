@@ -51,15 +51,16 @@
                 <li role="presentation"><a href="#upload-audio">Upload</a></li>
                 </ul-->
         <div class="pull-right user-state">
-          <button type="button" class="btn">
+          <!--button type="button" class="btn">
             <span class="glyphicon glyphicon-envelope"></span>
+          </button-->
+          <button type="button" id="sign-in" class="btn">
+            <!--span class="glyphicon glyphicon-globe"></span-->
+            <span id="signinview">Sign In</span>
           </button>
-          <button type="button" class="btn">
-            <span class="glyphicon glyphicon-globe"></span>
-          </button>
-          <button type="button" class="btn">
+          <!--button type="button" class="btn">
             <span class="glyphicon glyphicon-option-horizontal"></span>
-          </button>
+          </button-->
           <!--a href="/login" ><button
               type="submit"
               class="btn
@@ -218,6 +219,23 @@
     <span> Copyright </span>
     </footer-->
 
+    <script>
+      window.audioSwtr = window.audioSwtr || {};
+
+      audioSwtr.swtstoreURL = function() { return '{{ config.SWTSTORE_URL }}'; }
+      audioSwtr.endpoints = {
+      'get': '/api/sweets/q',
+      'post': '/api/sweets',
+      'context': '/api/contexts',
+      'auth': '/oauth/authorize',
+      'login': '/auth/login',
+      'logout': '/auth/logout'
+      };
+      audioSwtr.access_token = '{{ access_token }}';
+      audioSwtr.refresh_token = '{{ refresh_token }}';
+      audioSwtr.app_id = '{{ config.APP_ID }}';
+      audioSwtr.oauth_redirect_uri = '{{ config.REDIRECT_URI }}';
+    </script>
 
     <!-- Templates -->
     <script type="text/template" id="audio-item-template">
@@ -476,6 +494,7 @@
   visualization -->
   <script src="static/js/BootSideMenu.js"> </script> <!-- bootstrap+jquery
   plugin for side menu-->
+  <script src="static/js/oauth.js"> </script>
   <script src="static/js/theme.js"> </script>
   <script
     src="//cdn.jsdelivr.net/emojione/1.5.0/lib/js/emojione.min.js"></script>
