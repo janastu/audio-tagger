@@ -1,0 +1,192 @@
+/*Audio Tagging app */
+
+/* Global styles */
+html {
+  background-color: #E5E5E5;
+}
+
+.btn {
+  margin:1px;
+  border:none;
+  border-radius: 0px;
+}
+/* end of global styles */
+
+
+/* header and nav section  */
+
+header {
+  height: 50px;
+}
+.custom-nav {
+  background-color: #03a9f4;
+  border-color: #03a9f4;
+}
+.custom-nav .custom-brand {
+  color: #fff;
+}
+.main-nav {
+  margin-left: 10px;
+  margin-top: 4px;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+}
+.user-state{
+  padding: 10px;
+  color: white;
+}
+.user-state .btn{
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+}
+/* end of header and nav section*/
+
+
+/* audio list view - */
+#dashboard {
+}
+#audio-list {
+  height: 1080px;
+  margin-top:15px;
+}
+.audio-feed {
+  border: 1px solid #ccc;
+  background-color: #ffffff;
+  margin-bottom: 5px;
+  padding: 15px;
+}
+.feed-data {
+  display: block;
+  font-size: 12px;
+  color: #999;
+  padding: 5px;
+
+}
+.post-card-header {
+  display: inline-flex;
+  height: 35px;
+  margin-left: 15px;
+}
+.post-card-body{
+  width: auto;
+  margin: 0 auto;
+  padding: 13px;
+  overflow: auto;
+}
+.post-card-footer {
+  margin-left: 30px;
+}
+.profile-image {
+  width:75px;
+  height: 85px;
+}
+.custom-profile-pic {
+  width:70px;
+}
+.feed-stats {
+  margin-left: 15px;
+  margin-top: 5px;
+}
+.feed-stats span {
+  padding: 5px;
+}
+.recent-feed-data {
+  border: 1px solid #ccc;
+  cursor: pointer;
+  width: 278px;
+}
+/*end of audio list view */
+
+
+/*audio play area - to add additional attributes to audio
+ * file*/
+#play-wrap {
+  margin-top:15px;
+}
+
+#audio-play-area {
+  margin-left: 15px;
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+audio {
+  width: 279px;
+}
+#submit-form {
+  margin-top: -7px;
+}
+.play-tag-input {
+  display: block;
+  padding: 15px;
+}
+#add-tag{
+  border-radius: 0px;
+}
+.tag-editor {
+  margin-left: 0px;
+}
+/*end of audio play area */
+
+
+/* tag cloud view for tags and user activity visualization*/
+#tag-clouds {
+  margin-top: 15px;
+}
+#tag-cloud {
+  min-height: 200px;
+  height: 300px;
+  background-color: #fff;
+  margin-left: 15px;
+  border: 1px solid #ccc;
+}
+#tag-cloud ul {
+  list-style: none;
+}
+/*tag view in feed*/
+.suggest-tag-title {
+  margin:1px;
+  padding: 5px;
+}
+.suggest-tag-item {
+  margin: 1px;
+  display: block;
+  text-align: center;
+  border-radius: 12px;
+  padding: 5px;
+  background-color: rgba(200, 200, 200, 0.5);
+}
+.feed-data ul li {
+  list-style: none;
+}
+.admin-forms {
+  padding: 15px;
+}
+styles inside side menu is not applied
+ #admin-panel{
+  padding: 10px;
+}
+#upload-audio {
+  padding: 10px;
+}
+/*end of tag cloud view*/
+
+/* User activity container audio-list-right-column*/
+#play-wrap .user-activity {
+  width: 200px;
+}
+.user-activity {
+  background-color: #fff;
+  padding: 15px;
+  border: 1px solid #ccc;
+  height: 300px;
+}
+.user-activity-item {
+  padding:10px;
+  border: 1px solid #ccc;
+  margin: 0 auto;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+/* end user activity container */
