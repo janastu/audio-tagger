@@ -1,7 +1,14 @@
+# Ignore virtualenv directories and files
 bin/
 include/
 lib/
 local/
+build/
+pip-selfcheck.json
 
-*.*~
-.*.swp
+# Ignore editor recovery files
+
+*~
+.*.sw[p|o]
+[#]*[#]
+.\#*
