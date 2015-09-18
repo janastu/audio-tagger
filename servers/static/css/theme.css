@@ -1,7 +1,7 @@
 /*Audio Tagging app */
 
 /* Global styles */
-html {
+html body {
   background-color: #E5E5E5;
 }
 
@@ -10,6 +10,12 @@ html {
   border:none;
   border-radius: 0px;
 }
+.alert {
+    width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
 /* end of global styles */
 
 
@@ -57,7 +63,6 @@ header {
 }
 .feed-data {
   display: block;
-  font-size: 12px;
   color: #999;
   padding: 5px;
 
@@ -92,8 +97,8 @@ header {
 }
 .recent-feed-data {
   border: 1px solid #ccc;
-  cursor: pointer;
-  width: 278px;
+  width: auto;
+
 }
 /*end of audio list view */
 
@@ -105,7 +110,6 @@ header {
 }
 
 #audio-play-area {
-  margin-left: 15px;
   background-color: #fff;
   padding: 10px;
   border: 1px solid #ccc;
@@ -130,6 +134,36 @@ audio {
 
 
 /* tag cloud view for tags and user activity visualization*/
+.sidebar-wrap {
+    webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    margin-left: -250px;
+    left: 0px;
+    width: 350px;
+    background: #f0f0f0;
+    position: fixed;
+    height: auto;
+    z-index: 10000;
+    -webkit-transition: all .4s ease 0s;
+    -moz-transition: all .4s ease 0s;
+    -o-transition: all .4s ease 0s;
+    -ms-transition: all .4s ease 0s;
+    transition: all .4s ease 0s;
+    box-shadow: 1px 1px 1px #262525;
+    border-left: none;
+    padding-right: 5px;
+    padding-left: 10px;
+}
+
+.wrapper.active {
+    padding-left: 0px;
+}
+.wrapper.active .sidebar-wrap {
+    left: 250px;
+}
 #tag-clouds {
   margin-top: 15px;
 }
@@ -143,6 +177,9 @@ audio {
 #tag-cloud ul {
   list-style: none;
 }
+#tag-cloud span {
+    cursor: pointer;
+}
 /*tag view in feed*/
 .suggest-tag-title {
   margin:1px;
@@ -150,14 +187,21 @@ audio {
 }
 .suggest-tag-item {
   margin: 1px;
-  display: block;
+  display: inline-block;
   text-align: center;
   border-radius: 12px;
   padding: 5px;
   background-color: rgba(200, 200, 200, 0.5);
+  cursor: pointer;
+  font-weight: 600;
 }
-.feed-data ul li {
+.collapse ul li {
   list-style: none;
+  display:none;
+}
+.collapse.in ul li {
+  list-style: none;
+  display:inline;
 }
 .admin-forms {
   padding: 15px;
@@ -190,3 +234,8 @@ styles inside side menu is not applied
 }
 
 /* end user activity container */
+
+/* search results alert */
+#search-results-container .alert strong h3 {
+    display: inline;
+}

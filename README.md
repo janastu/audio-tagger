@@ -3,7 +3,10 @@ Javascript application for audio tagging and management for Community
 Radio
 
 Features:
-Get audio files from the DA server API
+Get audio files from Server
+Api request returns a collection of urls for mp3 files
+Api should allow to post uploads
+more on that here: https://github.com/janastu/da-server
 
 HTML5 audio player to load and play audio
 
@@ -20,9 +23,15 @@ Installation
 Python virtualenv requires
 Install dependencies
 python setup.py install
+
+SwtStore is used for User authentication and Tag, feedback storing
+Check out on how to set up the store,
+https://github.com/janastu/swtstore 
+
+copy sampleConfig.py to config.py
+and fill all the details
+
 python servers/audioApp.py
 
-New Feature - Swtr version of Audio Swtr
-More on Configuration and setup coming soon..
-
+Need help with documentation, testing!
 
