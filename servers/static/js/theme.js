@@ -13,6 +13,15 @@
       crossDomain: true
     });
     this.handleOAuth();
+    this.app_router = new AppRouter();
+    Backbone.history.start();
+    this.app_router.start();
+    $(".menu-toggle").click(function(e) {
+        e.preventDefault();
+        $(".wrapper").toggleClass("active");
+        $('.side_name').toggleClass("active");
+    });
+
   };
 
 
@@ -36,7 +45,7 @@
   var AudioAnnoSwt = Backbone.Model.extend({
     defaults: {
       'who': '',
-      'what': 'img-anno',
+      'what': 'audio-tagger',
       'where': '',
       'how': {}
     },
@@ -59,23 +68,24 @@
     // @options.error: error callback to call
     getAll: function(options) {
       // error checking
-      if(!options.where) {
-        throw Error('"where" option must be passed to get sweets of a URI');
+      if(!options.what) {
+        throw Error('"what" option must be passed to get sweets of a URI');
         return false;
       }
       // setting up params
-      var where = options.where,
-          what = options.what || null;
-      who = options.who || null;
+      var where = options.where || null,
+          what = options.what,
+          who = options.who || null;
 
-      url = audioSwtr.swtstoreURL() + audioSwtr.endpoints.get + '?where=' +
-        encodeURIComponent(where);// '&access_token=' + swtr.access_token;
+
+      url = audioSwtr.swtstoreURL() + audioSwtr.endpoints.get + '?what=' +
+        encodeURIComponent(what) + '&access_token=' + audioSwtr.access_token;
 
       if(who) {
         url += '&who=' + who;
       }
-      if(what) {
-        url += '&what=' + what;
+      if(where) {
+        url += '&where=' + where;
       }
       // get them!
       this.sync('read', this, {
@@ -113,7 +123,7 @@
 
       this.sync('create', dummy_collection, {
         url: url,
-        success: function() {
+        success: function(options) {
           if(typeof options.success === 'function') {
             options.success.apply(this, arguments);
           }
@@ -142,13 +152,131 @@
 
   //testing audioSwtr
   audioSwtr.playArea = Backbone.View.extend({
+    el: "#audio-play-area",
     events: {
+      "click #submit-form" : "submitForm",
+      "change input" : "emojiChange",
+      "click .suggest-tag-item" : "addTagViz",
+      "click .fav-button" : "favClick",
+      "click .dislike-button" : "dislikeClick",
+      "click #cancel-form" : "toggle"
     },
-    initialize: function() {
-      this.collection = new audioSwtr.AudioAnnoSwts();
-      this.listenTo(this.collection, 'add', this.render);
+    initialize: function(options) {
+        console.log(options);
+       var modelId = options.id || '';
+      this.model = audioTagApp.audioCollection.get(modelId);
+      this.swtrTemplate = _.template($('#sweets-template').html());
+      this.tagsListTemplate = _.template($('#tags-list-template').html());
+      this.alertsTemplate = _.template($('#alert-template').html());
+      this.listenTo(audioSwtr.storeCollection, 'add', this.swtsRender);
+      this.render();
     },
+    template: _.template($('#play-item-template').html()),
     render: function() {
+        console.log("in play area");
+        if(this.$el.is(':hidden')){
+            this.toggle();
+        }
+      this.$el.html('');
+      this.$el.append(this.template(this.model.toJSON()));
+      $("body").scrollTop(0); //this.$el should do this, but unable to get it working
+      this.$tags = $("#add-tag");
+      this.$tags.tagsinput();
+      //TODO: should figure our how to get inputs and build array
+      this.swtsRender();
+    },
+    submitForm: function(event) {
+      event.stopPropagation();
+      audioTagApp.dashboard.playArea.$el.find('.alert').remove();
+      if(audioSwtr.access_token){
+          this.$tags = $("#add-tag");
+          if(!(this.$el.find('input').val()=="")){
+              this.newTags = this.$tags.tagsinput('items');
+              console.log(this.newTags, "submit form");
+              this.swtrBuild();
+          }
+      }
+      else if(!audioSwtr.access_token) {
+          this.$el.prepend(this.alertsTemplate({message: "You need to Sign In" }));
+      }
+    },
+    swtrBuild: function() {
+        console.log("posting your sweets", this.model);
+        var swt = [{
+            who: audioSwtr.who,
+            what: 'audio-tagger',
+            where: this.model.get('url'),
+            how: {tags: this.newTags}
+        }];
+        audioSwtr.storeCollection.add(swt);
+        //swts to be posted
+        var swtsToPost = audioSwtr.storeCollection.getNew();
+        audioSwtr.storeCollection.post(swtsToPost);
+        this.render();
+    },
+    swtsRender: function() {
+        //swts to render
+        var swtsForAudio = audioSwtr.storeCollection.filter(function(swt) {
+            if(this.model.get('url') == swt.get('where')){
+                console.log("true");
+                return swt;
+            }
+        }, this);
+        console.log(swtsForAudio);
+        var tags = [];
+        _.each(swtsForAudio, function(swt) {
+            if(swt.get('how').tags){
+                tags.push(swt.get('how').tags);
+                this.$el.append(this.swtrTemplate(swt.toJSON()));
+            }
+        }, this);
+        tags = _.flatten(tags);
+        tags= _.uniq(tags);
+        this.$el.find('.tag-editor').append(this.tagsListTemplate({"tags": tags, "id": this.model.get('id')}));
+    },
+    addTagViz: function(event) {
+        event.stopPropagation();
+        var clickedTag = $(event.currentTarget).text();
+        console.log(clickedTag);
+        this.$el.find('input').val(clickedTag);
+    },
+    favClick: function(event) {
+        event.stopPropagation();
+        if(audioSwtr.access_token){
+            var data = $(event.currentTarget).data('like');
+            var audioModel = this.collection.get($(event.currentTarget).data("id"));
+            //TODO: Bug: one user can send multiple like sweets for one audio
+            //dom won't refresh(as required) - Swts get posted(should check
+            //for users who have liked alread
+            var swt = [{
+                who: audioSwtr.who,
+                what: 'audio-tagger',
+                where: audioModel.get('url'),
+                how: {like: true}
+            }];
+            audioSwtr.storeCollection.add(swt);
+            //swts to be posted
+            var swtsToPost = audioSwtr.storeCollection.getNew();
+            audioSwtr.storeCollection.post(swtsToPost);
+            //TODO: after posting data, need to render view
+            $(event.currentTarget).find('.feed-data').html(++data);
+            $(event.currentTarget).attr('data-like', data);
+            console.log("like", data);
+            this.$el.prepend(this.alertsTemplate({message: "Swt posted to the Store" }));
+        }
+        else if(!audioSwtr.access_token) {
+            this.$el.prepend(this.alertsTemplate({message: "You need to Sign In" }));
+        }
+    },
+    toggle: function() {
+        if(this.$el.is(':visible')) {
+            this.$el.hide();
+            console.log("visible");
+        }
+        else {
+            this.$el.show();
+            console.log("hidden");
+        }
     }
   });
 
@@ -220,150 +348,148 @@
       }
     }
   });
-  //Audio play area - to listen audio
-  //add tags, name category
-  //TODO: should listen to tag clouds
-  var audioPlayArea = Backbone.View.extend({
-    el: "#audio-play-area",
-    events: {
-      "click #submit-form" : "submitForm",
-      "change input" : "emojiChange",
-      "click .suggest-tag-item" : "addTagViz",
-      "click #cancel-form" : "toggle"
-    },
-    initialize: function(options) {
-      this.model.on('change', this.render, this);
-      this.collection = new audioCollection({ url: "http://da.pantoto.org/api/tags/"+this.model.get('id')});
-      this.render();
-    },
-    template: _.template($('#play-item-template').html()),
-    render: function() {
-      this.$el.html('');
-      this.$el.append(this.template(this.model.toJSON()));
-      $("body").scrollTop(0); //this.$el should do this, but unable to get it working
-      //TODO: should figure our how to get inputs and build array
-      this.$tags = this.$el.find('input');
-      this.$tags.tagsinput();
-
-
-    },
-
-    //Visual input for tags - emojione
-    emojiChange: function(event) {
-      console.log("need to complete this");
-    },
-    //Add tag bby click - Future features should have vizual tag input
-    //against the text tag input
-
-    addTagViz: function(event) {
-      event.preventDefault();
-      this.$el.find('input').val($(event.currentTarget).text().slice(11));
-    },
-    //to get the tags value from DOM input and post to Server endpoint
-    submitForm: function(event) {
-      event.preventDefault();
-      //this.tempTags = [this.$tags.tagsinput('items')]//{'suggest': [this.$tags.val()], 'User': '+91-9035290792'}
-      //console.log(this.tempTags);
-      this.newTags = this.$tags.tagsinput('items');
-      console.log(this.newTags);
-      this.tags = this.model.get("tags");
-      this.tags.push(this.newTags);
-      this.model.set('tags', this.tags);
-      console.log(this.model);
-      this.collection.add(this.model);
-      console.log(this.model, this.collection, "playarea");
-      $.ajax({
-        type: 'POST',
-        url: this.collection.url,
-        data: {'tags': this.model.get('tags')},
-        success: function(response) {
-          console.log(response);
-        },
-        error: function() {
-          console.log("caught error");
-        }
-
-      });
-      this.render();
-
-    },
-    toggle: function() {
-      if(this.$el.is(':visible')) {
-        this.$el.hide();
-        console.log("visible");
-      }
-      else {
-        this.$el.show();
-        console.log("hidden");
-      }
-    }
-
-  });
 
   //Get request from the server endpoint
   //api:
   // list view for the audio files, sorted by date-time stamp
   // with other attributes from database
-  var dashboardview = Backbone.View.extend({
+var dashboardview = Backbone.View.extend({
     events: {
-      "click .recent-feed-data" : "playClick",
-      "click .add-tag-button" : "playClick",
-      "click .fav-button" : "favClick",
-      "click .share-button" : "shareClick",
-      "click .dislike-button" : "dislikeClick"
+        "click .feed-data .suggest-tag-item" : "searchTag",
+        "click .add-tag-button" : "playClick",
+        "click .fav-button" : "favClick",
+        "click .share-button" : "shareClick",
+        "click .dislike-button" : "dislikeClick"
     },
     initialize: function(options) {
-      this.$sideMenu = $("#side-menu-wrap");
-      this.collection.fetch({
-        success: function(collection, response) {
-          collection.set(response.files);
-          audioTagApp.dashboard.render();
-        },
-        error: function(collection) {
-          console.log("Error!! Error!!", collection);
+        this.$sideMenu = $("#side-menu-wrap");
+        this.alertsTemplate = _.template($('#alert-template').html());
+        this.listenTo(this.collection, "set", this.render);
+        if(this.$el.parent().siblings().is(':visible')){
+            this.$el.parent().siblings().hide();
         }
-      });
     },
     template: _.template($('#audio-item-template').html()),
-    render: function() {
-      this.collection.each(function(item) {
-        this.$el.append(this.template(item.toJSON()));
-      }, this);
-      $('[data-toggle="tooltip"]').tooltip();
-      this.$sideMenu.BootSideMenu({
-        side: "right",
-        autoClose: true});
+    dummyrender: function() {
+       /* this.collection.each(function(item) {
+            this.$el.append(this.template(item.toJSON()));
+        }, this);
+        $('[data-toggle="tooltip"]').tooltip();
+        this.$sideMenu.BootSideMenu({
+            side: "right",
+            autoClose: true});*/
     },
-    toggle: function() {
-      if(this.$el.is(':visible')) {
-        this.$el.hide();
-        console.log("visible");
-      }
-      else {
-        this.$el.show();
-        console.log("hidden");
-      }
+    render: function() {
+        this.collection.each(function(item) {
+            var models = audioSwtr.storeCollection.filter(function(swt) {
+                if(_.isEqual(item.get('url'), swt.get('where'))){
+                    return swt;
+                }
+            });
+            var likes = [];
+            var dislikes = [];
+            var tags= [];
+            if(models) {
+                _.each(models, function(model) {
+                    if(model.get('how').like == true) {
+                        likes.push(model.get('who'));
+                    }
+                    else if(model.get('how').dislike == true) {
+                        dislikes.push(model.get('who'));
+                    }
+                    else if(model.get('how').tags){
+                        tags.push(model.get('how').tags);
+                    }
+                });
+            }
+            var uniqueTags = _.uniq(_.flatten(tags));
+            this.$el.append(this.template({
+                id: item.get('id'),
+                url: item.get('url'),
+                uploadDate: item.get('uploadDate'),
+                tags: uniqueTags,
+                taglen: uniqueTags.length,
+                likes: likes.length,
+                dislikes: dislikes.length
+            }));
+        }, this);
     },
     playClick: function(event) {
-      event.preventDefault();
-      this.playArea = new audioPlayArea({model: this.collection.get($(event.currentTarget).data("id"))});
-      this.toggle();
+        event.preventDefault();
+        this.playArea = new audioSwtr.playArea({id: $(event.currentTarget).data("id")});
+        //audioSwtr.app_router.play({id: $(event.currentTarget).data("id")});
+        this.toggle();
     },
     favClick: function(event) {
-      var data = $(event.currentTarget).data('like');
-      console.log("like", data);
+        event.stopPropagation();
+        if(audioSwtr.access_token){
+            var data = $(event.currentTarget).data('like');
+            var audioModel = this.collection.get($(event.currentTarget).data("id"));
+            //TODO: Bug: one user can send multiple like sweets for one audio
+            //dom won't refresh(as required) - Swts get posted(should check
+            //for users who have liked alread
+            var swt = [{
+                who: audioSwtr.who,
+                what: 'audio-tagger',
+                where: audioModel.get('url'),
+                how: {like: true}
+            }];
+            audioSwtr.storeCollection.add(swt);
+            //swts to be posted
+            var swtsToPost = audioSwtr.storeCollection.getNew();
+            audioSwtr.storeCollection.post(swtsToPost);
+            //TODO: after posting data, need to render view
+            $(event.currentTarget).find('.feed-data').html(++data);
+            $(event.currentTarget).attr('data-like', data);
+            console.log("like", data);
+        }
+        this.$el.find('.alert').remove();
+        this.$el.prepend(this.alertsTemplate({message: "You need to Sign In" }));
     },
     shareClick: function(event) {
-      var data = $(event.currentTarget).data('forward');
-      console.log("forward", data);
+        var data = $(event.currentTarget).data('forward');
+        console.log("forward", data);
     },
     dislikeClick: function(event) {
-      var data = $(event.currentTarget).data('dislike');
-      console.log("dislike", data);
+        event.stopPropagation();
+        if(!audioSwtr.access_token){
+            this.$el.prepend(this.alertsTemplate({message: "You need to Sign In" }));
+        }
+        var data = $(event.currentTarget).data('dislike');
+        var audioModel = this.collection.get($(event.currentTarget).data("id"));
+        var swt = [{
+            who: audioSwtr.who,
+            what: 'audio-tagger',
+            where: audioModel.get('url'),
+            how: {dislike: true}
+        }];
+        audioSwtr.storeCollection.add(swt);
+        //swts to be posted
+        var swtsToPost = audioSwtr.storeCollection.getNew();
+        audioSwtr.storeCollection.post(swtsToPost);
+        //TODO: after posting data, need to render view
+        $(event.currentTarget).find('.feed-data').html(++data);
+        $(event.currentTarget).attr('data-dislike', data);
+        console.log("dislike", data);
     },
+    searchTag: function(event) {
+        event.stopPropagation();
+        this.searchView = new searchTagView({keyword : ($(event.currentTarget).text())});
+        console.log ($(event.currentTarget).text().trim());
+    },
+    toggle: function() {
+        if(this.$el.is(':visible')) {
+            this.$el.hide();
+            console.log("visible");
+        }
+        else {
+            this.$el.show();
+            console.log("hidden");
+        }
+    }
 
 
-  });
+});
 
   var searchTagView = Backbone.View.extend({
     el: "#search-results-container",
@@ -372,44 +498,41 @@
       "click .recent-feed-data": "callPlayArea"
     },
     initialize: function(options) {
-      //_.bindAll(this, 'callPlayArea');
-      this.keyword = options.keyword || '';
-      this.collection = new audioCollection({ url: "http://da.pantoto.org/api/files"});
-      this.collection.fetch({
-        success: function(collection, response) {
-          console.log(collection, response.files);
-          collection.set(response.files);
-          audioTagApp.tagCloud.searchView.render();
-
-        },
-        error: function(collection) {
-          console.log("Error!! Error!!", collection)
-        }
-      });
+        //_.bindAll(this, 'callPlayArea');
+        this.keyword = options.keyword || '';
+        this.searchHeaderTemplate = _.template($('#search-header-template').html());
+        console.log(options);
+        this.listenTo(audioSwtr.storeCollection, "add", this.render);
+        this.render();
     },
     render: function() {
       $(this.el).html('');
-      this.searchResults = this.collection.filter( function(item) {
-        console.log(this.keyword);
-        if(_.contains(item.get('tags'), this.keyword )){
-          return item;
+      this.searchResults = audioSwtr.storeCollection.filter( function(swt) {
+        console.log(this.keyword, swt);
+        if(_.contains(swt.get('how').tags, this.keyword )){
+          return swt;
         }
       }, this);
+      if(this.keyword){
+           this.$el.prepend(this.searchHeaderTemplate({message: "<h3>"+this.keyword+" </h3> has <h3>"+this.searchResults.length+"</h3> messages" }));
+        }
+      console.log(this.searchResults);
       //bug - need to fix
       if(audioTagApp.dashboard.$el.is(':visible')) {
         audioTagApp.dashboard.toggle();
       }
-      /*if(audioTagApp.dashboard.playArea.$el.is(':visible')) {
-       audioTagApp.dashboard.playArea.toggle();
-       }*/
       _.each(this.searchResults, function(item) {
         $(this.el).append(this.template(item.toJSON()));
       }, this);
     },
     callPlayArea: function(event) {
       event.stopPropagation();
-      this.toggle();
-      new audioPlayArea({model: this.collection.get($(event.currentTarget).data("id"))});
+      if(!audioTagApp.dashboard.playArea){
+      this.playArea = new audioSwtr.playArea({id: $(event.currentTarget).data("id")});
+      //this.playArea = new audioPlayArea({$(event.currentTarget).data("id")});
+      }
+      audioTagApp.dashboard.playArea({id: $(event.currentTarget).data("id")});
+      //new audioPlayArea({model: this.collection.get($(event.currentTarget).data("id"))});
     },
     toggle: function() {
       if(this.$el.is(':visible')) {
@@ -433,98 +556,149 @@
     },
     initialize: function() {
       this.$tagClouds = $("#tag-clouds");
-      // this.$searchContainer = $("#search-results-container");
-      // this.tagSearchTemplate = _.template($('#search-results-template').html());
-      this.listenTo(this.collection, "change", this.render);
-      this.collection.fetch({
-        success: function(collection, response) {
-          collection.set(response.files);
-          audioTagApp.tagCloud.render();
-        },
-        error: function(collection) {
-          console.log("Error!! Error!!", collection);
-        }
-      }, this);
+      this.$searchForm = $("#input-keyword");
+      this.listenTo(audioSwtr.storeCollection, "add", this.render);
     },
     render: function() {
-      var wordArray = _.chain(this.collection.pluck('tags')).flatten().countBy().map(function(val, key) {
-        return {text:key, weight:val};
-      });
-      this.$el.jQCloud(wordArray._wrapped,
-                       {
-                         colors: ["#000", "#999" ]
-                       });
-
+        var wordArray = _.chain(this.collection.pluck('how')).pluck('tags').flatten().compact().countBy().map(function(val, key){
+            return {text: key, weight:val};
+        });
+        this.$el.jQCloud(wordArray._wrapped);
     },
     searchTag: function(event) {
       event.preventDefault();
-
-      this.searchView = new searchTagView({keyword : ($(event.currentTarget).text())});
+      this.searchView = new searchTagView({keyword:($(event.currentTarget).text())});
     }
 
   });
 
-  var appview = Backbone.View.extend({
+var appview = Backbone.View.extend({
     el: $('body'),
     events:{
-      "click #homeAnchor": "callDashboard",
-      'click #sign-in': 'signIn'
+        "click #homeAnchor": "callDashboard",
+        'click #sign-in': 'signIn'
     },
     initialize: function(options) {
-      _.bindAll(this, 'callDashboard');
+        _.bindAll(this, 'callDashboard');
 
-      // initialize the oauth stuff
-      this.oauth = new Oauth({
-        app_id: audioSwtr.app_id,
-        endpoint: audioSwtr.swtstoreURL() + audioSwtr.endpoints.auth,
-        redirect_uri: audioSwtr.oauth_redirect_uri,
-        scopes: 'email,sweet,context'
-      });
-      this.render();
+        // initialize the oauth stuff
+        this.oauth = new Oauth({
+            app_id: audioSwtr.app_id,
+            endpoint: audioSwtr.swtstoreURL() + audioSwtr.endpoints.auth,
+            redirect_uri: audioSwtr.oauth_redirect_uri,
+            scopes: 'email,sweet,context'
+        });
+        audioSwtr.storeCollection = new audioSwtr.AudioAnnoSwts();
+        this.audioCollection = new audioCollection({ url: "http://da.pantoto.org/api/files"});
+        this.audioCollection.fetch({
+            success: function(collection, response) {
+                collection.set(response.files);
+                audioTagApp.getSweets();
+            },
+            error: function(collection) {
+                console.log("Error!! Error!!", collection);
+            }
+        });
+        this.render();
+    },
+    getSweets: function() {
+        audioSwtr.storeCollection.getAll({
+            what: 'audio-tagger',
+            where: null,
+            success: function(data) {
+                audioSwtr.storeCollection.add(data);
+                audioTagApp.dashboard.render();
+            }
+        }, this);
+    },
+    filterSocialData: function() {
+        this.socialData = audioSwtr.storeCollection.filter(function(item){
+            if(!item.get('how').tags) {
+                return item
+            }
+        });
     },
     render: function(){
       this.dashboard = new dashboardview({el:"#dashboard-body",
-                                          collection: new audioCollection({ url: "http://da.pantoto.org/api/files"})});
-      this.tagCloud = new tagCloudView({collection: new audioCollection({ url: "http://da.pantoto.org/api/files"})});
+                                          collection: this.audioCollection });
+      this.tagCloud = new tagCloudView({collection: audioSwtr.storeCollection});
     },
     signIn: function(event) {
-      event.preventDefault();
-      console.log("calling sign in");
-      // if user is Guest.. sign them in..
-      // if(audioSwtr.who === 'Guest') {
-      //     console.log("authorizing");
-      this.oauth.authorize();
-      // }
-      // return false;
+        event.preventDefault();
+        console.log("calling sign in");
+        // if user is Guest.. sign them in..
+        // if(audioSwtr.who === 'Guest') {
+        //     console.log("authorizing");
+        this.oauth.authorize();
+        // }
+        // return false;
     },
     userLoggedIn: function(username) {
-      audioSwtr.who = username;
-      var text = 'Signed in as <b><u>' + audioSwtr.who + '</u></b>';
-      $('#signinview').html(text);
-      // $.ajax({
-      //   url:"http://locahost:5001/api/sweets/q?access_token="+audioSwtr.access_token,
-      //   type: 'POST',
-      //   crossDomain:true,
-      //   data:[{who:'arvindkhadri',
-      //          what:'img-anno',
-      //          'where':'http://localhost:5000',
-      //          how:{}}]
-      // });
+        audioSwtr.who = username;
+        var text = 'Signed in as <b><u>' + audioSwtr.who + '</u></b>';
+        $('#signinview').html(text);
+        // $.ajax({
+        //   url:"http://locahost:5001/api/sweets/q?access_token="+audioSwtr.access_token,
+        //   type: 'POST',
+        //   crossDomain:true,
+        //   data:[{who:'arvindkhadri',
+        //          what:'img-anno',
+        //          'where':'http://localhost:5000',
+        //          how:{}}]
+        // });
     },
     userLoggedOut: function() {
-      swtr.who = 'Guest';
-      $('#signinview').html('Logged out');
+        swtr.who = 'Guest';
+        $('#signinview').html('Logged out');
     },
     callDashboard: function(event) {
-      if(audioTagApp.dashboard.$el.is(':hidden')) {
-        audioTagApp.dashboard.toggle();
-        audioTagApp.tagCloud.searchView.$el.html('');
-      }
+        if(audioTagApp.dashboard.$el.is(':hidden')) {
+            audioTagApp.dashboard.toggle();
+            audioTagApp.dashboard.playArea.toggle();
+            audioSwtr.app_router.navigate('home', {trigger: true});
+            //audioTagApp.tagCloud.searchView.$el.html('');
+        }
     }
-  });
-  audioTagApp = new appview;
+});
 
-  window.onload = function() {
+
+var AppRouter = Backbone.Router.extend({
+    routes: {
+        'home': 'home',
+        'play': 'play',
+        'search' : 'search'
+    },
+    home: function(params) {
+        this.navigate('home');
+        audioTagApp.dashboard;
+        audioTagApp.tagCloud;
+    },
+    play: function(params) {
+        if(!audioSwtr.acces_token) {
+            console.log("you have to be logged in");
+        }
+        console.log(audioSwtr.acces_token);
+        this.play_area = new audioSwtr.playArea(audioTagApp.audioCollection.get(params.id));
+        this.navigate('play');
+        console.log(params);
+    },
+    search: function() {
+    },
+    start: function() {
+        var fragment = window.location.hash.split('#')[1];
+        if(!fragment) {
+            this.navigate('home', {trigger: true});
+            return;
+        }
+        var route = fragment.split('/')[1];
+        if(_.indexOf(_.keys(this.routes), route) > -1) {
+            this.navigate(fragment, {trigger: true});
+        }
+    },
+});
+
+audioTagApp = new appview;
+window.onload = function() {
     audioSwtr.init();
-  };
+};
 })(window);

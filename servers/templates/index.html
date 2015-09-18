@@ -23,7 +23,7 @@
     <header>
       <nav class="navbar navbar-inverse navbar-fixed-top custom-nav">
         <div class="container">
-          <div class="navbar-header">
+          <div class="navbar-header" >
             <button type="button" class="navbar-toggle
                                          collapsed" data-toggle="collapse"
                     data-target="#navbar" aria-expanded="false"
@@ -93,108 +93,33 @@
     </header>
 
     <section class="container col-md-3 col-lg-3 col-sm-3" id="tag-clouds">
-      <div class="row"  >
+        <div class="wrapper">
+            <div class="sidebar-wrap">
+                <div class="">
+                    <span class="sidebar-heading">Tags</span>
+                    <a class="menu-toggle" href="#">
+                        <span class="glyphicon
+                        glyphicon-align-justify
+                        pull-right"></span>
+                    </a>
+                </div>
         <div class="" id="tag-cloud">
         </div>
       </div>
-      <div class="row">
-      </div>
+        </div>
     </section>
 
-    <section class="container col-md-4 col-lg-4 col-sm-4" id="audio-list">
-      <!--div id="side-menu-wrap" data-side="right">
-          <div class="row"  id="container admin-panel">
-            <div class="form-wrapper panel ">
-              < {% if error %}
-                <div class="alert alert-danger"><b>error:</b> {{ error }}
-                </div>
-                {% endif %}>
-                <div class="panel-heading"><a role="button" data-toggle="collapse"
-                                              href="#auth-form" aria-expanded="false"
-                                              aria-controls="auth-form"> To Authenticate: enter the phone number of the user,
-                    to grant
-                    permissions to set tags</a></div>
-                <div class="panel-body collapse" id="auth-form">
-                  <form class="form-horizontal admin-forms"
-                        action=""
-                        method="">
-                    <div class="form-group">
-                      <label class="form-label"
-                             for="phone-number">phone
-                        number</label>
-                      <div class="controls">
-                        <input type="tel" class="form-control" id="phone-number"
-                               name="usertel" pattern='\d{10}' placeholder="Phone Number">
-                      </div>
-                    </div>
-                    <div
-                       class="form-group">
-                      <div
-                         class="controls">
-                        <button
-                           type="submit"
-                           class="btn
-                           btn-primary
-                           ">Submit</button>
-                      </div>
-                    </div>
-                    <div
-                       class="clearfix"></div>
-                  </form>
-                </div>
-            </div>
-          </div>
-
-
-          <div class="row" id="container upload-audio">
-            <div class="form-wrapper panel">
-              < {% if error %}
-                <div class="alert alert-danger"><b>error:</b> {{ error }}
-                </div>
-                {% endif %}>
-                <div class="panel-heading"><a role="button" data-toggle="collapse"
-                                              href="#upload-form" aria-expanded="false"
-                                              aria-controls="upload-form">To Upload - enter the URL for the Audio
-                    file</a></div>
-                <div class="panel-body collapse" id="upload-form">
-                  <form class="form-horizontal admin-forms"
-                        action=""
-                        method="">
-                    <div class="form-group">
-                      <label class="form-label"
-                             for="url">URL for audio</label>
-                      <div
-                         class="controls">
-                        <input
-                           type="url"
-                           class="form-control"
-                           id="upload-input"
-                           name="url"
-                           placeholder="Enter the url for the audio file">
-                      </div>
-                    </div>
-                    <div
-                       class="form-group">
-                      <div class="controls">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                      </div>
-                    </div>
-                    <div
-                       class="clearfix"></div>
-                  </form>
-                </div>
-            </div>
-          </div>
-</div-->
+    <section class="container" id="audio-list">
+    <div class="row" id="search-results-container">
+    </div>
       <div class="row">
-        <div id="search-results-container">
-        </div>
         <div class="" id="dashboard">
           <div id="dashboard-body">
 
           </div>
         </div>
-        <div id="audio-play-area">
+        <div id="audio-play-area" class="col-md-offset-3 col-lg-offset-3
+            col-sm-offset-3 col-md-6 col-lg-6 col-sm-6 col-xs-offset-3">
           <!--h4> Play Area </h4-->
         </div>
       </div>
@@ -202,17 +127,6 @@
 
 
     <section class="container col-md-4 col-lg-4 col-sm-4" id="play-wrap">
-      <!--div class="user-activity" >
-          <div class="row user-activity-item" >
-            Todd suggested tags foo, bar, like for filename
-          </div>
-          <div class="row user-activity-item">
-            emareno suggested tags foo, bar for filename
-          </div>
-          <div class="row user-activity-item">
-            mike likes filename
-          </div>
-</div-->
     </section>
 
     <!--footer>
@@ -239,15 +153,11 @@
 
     <!-- Templates -->
     <script type="text/template" id="audio-item-template">
+<div class="col-md-4 col-lg-4 col-sm-4">
       <div class="audio-feed">
-        <div class="row">
           <div class="post-card">
 
             <div class="post-card-header">
-              <div class="profile-image">
-                <img src="static/img/person-placeholder.jpg" alt="profile-pic"
-                     class="img-responsive custom-profile-pic">
-              </div>
               <div class="feed-data">
                 <strong>uploaded on
                   <%=uploadDate %> </strong>
@@ -265,80 +175,74 @@
                                                                           '%20')%> >
                 </audio>
               </div>
+            </div>
+
+          </div> <!-- end suggested tags container -->
+
+          <!-- social network action, like, share, options -->
+            <div class="col-md-offset-2 col-lg-offset-2 col-sm-offset-2
+                        ">
+              <div class="post-card-footer">
+              <div class="btn-group">
+                <button type="button"  class="btn btn-default add-tag-button"
+                        data-id="<%=id%>" data-placement="top"
+                        title="Tag" data-toggle="tooltip"
+                        >
+                  <span class="glyphicon glyphicon-tags"></span>
+                  <span class="feed-data"><%=taglen%></span>
+                </button>
+                <button type="button" class="btn btn-default fav-button"
+                        data-toggle="tooltip" data-placement="top"
+                        title="Like" data-id="<%=id%>"  data-like="<%=likes%>">
+                  <span class="glyphicon glyphicon-chevron-up">
+                    <div id="#hiddendiv"></div>
+                  </span>
+                    <span class="feed-data"><%=likes%></span>
+                </button>
+                <button type="button" class="btn btn-default dislike-button"
+                        data-toggle="tooltip" data-placement="top"
+                        title="Dislike" data-id="<%=id%>" data-dislike="<%=dislikes%>" >
+                  <span class="glyphicon glyphicon-chevron-down">
+                  </span>
+                  <span class="feed-data"><%=dislikes%></span>
+                </button>
+                <button type="button" class="btn btn-default share-button"
+                        data-toggle="tooltip" data-placement="top"
+                        title="Forward" data-forward="2" >
+                  <span class="glyphicon glyphicon-retweet">
+                  </span>
+                  <span class="feed-data">3</span>
+                </button>
+                </div>
+              </div>
+            </div> <!--end tool-bar -->
               <div class="recent-feed-data" data-id="<%= id %>" >
-                <strong class="suggest-tag-title"> Suggested tags: </strong>
-                <div class="feed-data">
+                <button class="btn suggest-tag-title" type="button"
+                data-toggle="collapse" data-target="#<%=id%>"
+                aria-expanded="false" aria-controls="<%=id%>" > Suggested tags:
+                </button>
+                <div class="feed-data collapse" id="<%=id%>">
                   <ul>
                     <% for(var tag in tags) { %>
-                    <li><span class="suggest-tag-item"> User added <%=
+                    <li><span class="suggest-tag-item">  <%=
                                                                       tags[tag] %></span></li>
                     <% } %>
                   </ul>
                 </div>
               </div>
             </div>
-
-          </div> <!-- end suggested tags container -->
-
-          <!-- social network action, like, share, options -->
-          <div class="row">
-            <div class="col-md-offset-2 col-lg-offset-2 col-sm-offset-2
-                        ">
-              <div class="post-card-footer">
-                <button type="button"  class="btn btn-default add-tag-button"
-                        data-id="<%=id%>" data-placement="top"
-                        title="Tag" data-toggle="tooltip"
-                        >
-                  <span class="glyphicon glyphicon-tags"></span>
-                  <span class="feed-data"></span>
-                </button>
-                <button type="button" class="btn btn-default fav-button"
-                        data-toggle="tooltip" data-placement="top"
-                        title="Like" data-like="1">
-                  <span class="glyphicon glyphicon-chevron-up">
-                    <span class="feed-data">1</span>
-                    <div id="#hiddendiv"></div>
-                  </span>
-                </button>
-                <button type="button" class="btn btn-default dislike-button"
-                        data-toggle="tooltip" data-placement="top"
-                        title="Dislike" data-dislike="3" >
-                  <span class="glyphicon glyphicon-chevron-down">
-                  </span>
-                  <span class="feed-data">1</span>
-                </button>
-                <button type="button" class="btn btn-default
-                                             share-button" `:w
-                        data-toggle=" tooltip" data-placement="top"
-                        title="Forward" data-forward="2" >
-                  <span class="glyphicon glyphicon-retweet">
-                  </span>
-                  <span class="feed-data">3</span>
-                </button>
-                <!--button type="button" class="btn btn-default
-                    options-button"data-toggle="tooltip" data-placement="top"
-                    title="Options" >
-                    <span class="glyphicon glyphicon-option-vertical">
-                    </span>
-</button-->
-              </div>
-            </div> <!--end tool-bar -->
-        </div></div> <!-- end post card with audio feed data -->
-      </div>
+        </div>
+        </div> <!-- end post card with audio feed data -->
 
 
 </div> <!-- end audio-feed -->
-</script>
-<script type="text/template" id="play-item-template">
-  <div class="audio-feed">
-    <div class="row">
+    </script>
+    <script type="text/template" id="play-item-template">
+<div class="">
+<div class="audio-feed">
       <div class="post-card">
 
         <div class="post-card-header">
-          <div class="profile-image">
-            <img src="static/img/person-placeholder.jpg" alt="profile-pic"
-                 class="img-responsive custom-profile-pic">
-          </div>
           <div class="feed-data">
             <strong> Uploaded on <%=uploadDate%> </strong>
           </div>
@@ -355,25 +259,6 @@
                                                                       '%20')%> >
             </audio>
           </div>
-          <div class="recent-feed-data" >
-            <strong>Suggested Tags: </strong>
-            <div class="feed-data">
-              <ul>
-                <% for(var tag in tags) { %>
-                <li><span class="suggest-tag-item"> User added <%=
-                                                                  tags[tag] %></span></li>
-                <% } %>
-              </ul>
-            </div>
-          </div>
-          <!--div class="tag-dict">
-              <ul>
-                <% for(var tag in tags) { %>
-                <li><span class="suggest-tag-item"><%=
-                                                      tags[tag] %></span></li>
-                <% } %>
-              </ul>
-</div-->
         </div>
 
       </div> <!-- end suggested tags container -->
@@ -407,7 +292,7 @@
             </button>
             <button type="button" class="btn btn-default
                                          share-button"data-toggle="tooltip" data-placement="top"
-                    title="Forward" >
+                    title="Coming soon!" >
               <span class="glyphicon glyphicon-retweet">
               </span>
               <span class="feed-data">3</span>
@@ -423,7 +308,7 @@
     </div></div> <!-- end post card with audio feed data -->
   </div>
 </div> <!-- end audio-feed -->
-<div class="row tag-editor">
+<div class=" tag-editor">
   <div class="form-group">
     <input type="text" data-role="tagsinput" class="form-control"
            id="add-tag" placeholder="Add Tags">
@@ -445,44 +330,91 @@
     </div-->
   </div>
 </script>
-<script type="text/template" id="search-results-template">
-  <div class="audio-feed">
-    <div class="row">
-      <div class="post-card">
+<!--Swts container -->
+<script type="text/template" id="sweets-template">
+<div class="row " style="padding:15px;">
+<div class="profile-image">
+            <img src="static/img/person-placeholder.jpg" alt="profile-pic"
+                 class="img-responsive custom-profile-pic">
+          <%=who%>         
+          </div>
+          <div class="tags-container">
+          tagged this audio: <%=how.tags%>
+          </div>
 
-        <div class="post-card-header">
+          </div>
+
+</script>
+<script type="text/template" id="tags-list-template">
+<div class="recent-feed-data" >
+            <button class="btn" type="button" data-toggle="collapse"
+            data-target="#<%=id%>" aria-expanded="true"
+            aria-controls="<%=id%>" >Suggested Tags: </button>
+            <div class="feed-data collapse in" id="<%=id%>">
+              <ul>
+                <% for(var tag in tags) { %>
+                <li><span class="suggest-tag-item"><%=tags[tag] %></span></li>
+                <% } %>
+              </ul>
+            </div>
+          </div>
+</script>
+<script type="text/template" id="search-results-template">
+<div class="col-md-4 col-lg-4 col-sm-4">
+      <div class="audio-feed">
+          <div class="post-card">
+
+            <div class="post-card-header">
+            </div>
+
+            <div class="col-md-offset-2 col-lg-offset-2 col-sm-offset-2 col-xs-offset-2
+                        post-card-body ">
+              <div class="audio-file-default" >
+                <!-- Simple audio playback -->
+                <audio controls="controls" preload="none"  >
+                  Your browser does not support the <code>audio</code> element.
+                  <% var encodedUrl = encodeURIComponent(url)%>
+                  <source src=<%=decodeURIComponent(encodedUrl).replace(' ',
+                                                                          '%20')%> >
+                </audio>
+              </div>
+            </div>
+
+          </div> <!-- end suggested tags container -->
+        <div class="col-md-offset-2 col-lg-offset-2 col-sm-offset-2
+          col-xs-offset-2 post-card-body ">
+          <div class="recent-feed-data" data-id="<%= id %>">
           <div class="profile-image">
             <img src="static/img/person-placeholder.jpg" alt="profile-pic"
             class="img-responsive custom-profile-pic">
           </div>
           <div class="feed-data">
-            <strong> Uploaded on <%=uploadDate %> </strong>
-          </div>
-        </div>
-
-        <div class="col-md-offset-2 col-lg-offset-2 col-sm-offset-2
-          col-xs-offset-2 post-card-body ">
-          <div class="audio-file-default" >
-            <!-- Simple audio playback -->
-            <audio controls="controls"  preload="none">
-            Your browser does not support the <code>audio</code> element.
-            <source src=<%=url%> >
-            </audio>
-          </div>
-          <div class="recent-feed-data" data-id="<%= id %>">
-            <strong>Suggested Tags: </strong>
-            <div class="feed-data">
+            <strong><%=who%> </strong> 
+            Suggested Tags: 
               <ul>
-                <% for(var tag in tags) { %>
-                  <li><span class="suggest-tag-item"> User added <%=
-                    tags[tag] %></span></li>
+                <% for(var tag in how.tags) { %>
+                  <li><span class="suggest-tag-item"><%=
+                    how.tags[tag] %></span></li>
                   <% } %>
               </ul>
             </div>
+          <em><%=created %></em>
           </div>
         </div>
 
       </div> <!-- end suggested tags container -->
+    </script>
+    <script type="text/template" id="alert-template">
+<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert"
+  aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Warning!</strong> <%=message%>    </div>
+    </script>
+    <script type="text/template" id="search-header-template">
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert"
+  aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong><%=message%></strong>     </div>
     </script>
   <script src="static/js/jquery.min.js"></script> <!-- jquery version
   1.11.3-->

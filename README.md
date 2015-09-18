@@ -1,38 +1,37 @@
 # audio-tagger
-This is a Javascript application for audio tagging and management. 
-Javascript frontend application for audio tagging and management
+Javascript application for audio tagging and management for Community
+Radio
 
-Audio Play Area or item view:
-Collection 1: will load data from Table (ii)
-Server API to get data: Pending...
-Server API to Post data: Pending...
-Will load with the audio player with controls, and input area
-for adding attributes to the file, like Label, Name, Description, Tags.
-  UI for adding attributes should be intuitive, with drag and drop feature, or
-  click and choose from tagcloud.
+Features:
+Get audio files from Server
+Api request returns a collection of urls for mp3 files
+Api should allow to post uploads
+more on that here: https://github.com/janastu/da-server
 
-  List View:
-  Collection :  Server API to get data: http://da.server.pantoto.org/api/files
-  Will contain the list of audio files, sorted by date-time of upload.
-  Each list item will contain, File identifiers( like Device ID, Username and
-  more..) with date-time of upload from collection 1
-  If any user entries, suggestions available, should be shown from collection 2
+HTML5 audio player to load and play audio
 
-  Features in every list item:
-  Will contain Play button - > on click will load the audio file with default
-  identification attributes in the Audio Play Area.
-  Forward button - > onclick to share or forward content item
-  More options - > on click show more options
-  To add tags, POST request to server api
-  http://da.server.pantoto.org/api/tags/id(mongodb)
+Add tags to the Audio file - Should include text and non-text input(at this
+time thinking about emoji).
 
+Tag Management:
+Set Tags: A set of pre-defined tags, whose definition should help in
+workflow management.
+Suggested Tags: Community suggested tags
+Social Networking features like, unline and share audio.
 
-  Tag Cloud:
-  Visualization for the Tags, Categories and Users
+Installation
+Python virtualenv requires
+Install dependencies
+python setup.py install
 
-  Tags:
-  Feature - To have non-text tags, or pictures as tags for the non-literate
-  users
+SwtStore is used for User authentication and Tag, feedback storing
+Check out on how to set up the store,
+https://github.com/janastu/swtstore 
 
+copy sampleConfig.py to config.py
+and fill all the details
 
+python servers/audioApp.py
+
+Need help with documentation, testing!
 
