@@ -201,7 +201,6 @@
       }
     },
     swtrBuild: function() {
-        console.log("posting your sweets", this.model);
         var swt = [{
             who: audioSwtr.who,
             what: 'audio-tagger',
@@ -210,7 +209,7 @@
         }];
         audioSwtr.storeCollection.add(swt);
         //swts to be posted
-        var swtsToPost = audioSwtr.storeCollection.getNew();
+        var swtsToPost = JSON.stringify(audioSwtr.storeCollection.getNew());
         audioSwtr.storeCollection.post(swtsToPost);
         this.render();
     },
@@ -256,7 +255,7 @@
             }];
             audioSwtr.storeCollection.add(swt);
             //swts to be posted
-            var swtsToPost = audioSwtr.storeCollection.getNew();
+            var swtsToPost = JSON.stringify(audioSwtr.storeCollection.getNew());
             audioSwtr.storeCollection.post(swtsToPost);
             //TODO: after posting data, need to render view
             $(event.currentTarget).find('.feed-data').html(++data);
@@ -436,7 +435,7 @@ var dashboardview = Backbone.View.extend({
             }];
             audioSwtr.storeCollection.add(swt);
             //swts to be posted
-            var swtsToPost = audioSwtr.storeCollection.getNew();
+            var swtsToPost = JSON.stringify(audioSwtr.storeCollection.getNew());
             audioSwtr.storeCollection.post(swtsToPost);
             //TODO: after posting data, need to render view
             $(event.currentTarget).find('.feed-data').html(++data);
@@ -465,7 +464,7 @@ var dashboardview = Backbone.View.extend({
         }];
         audioSwtr.storeCollection.add(swt);
         //swts to be posted
-        var swtsToPost = audioSwtr.storeCollection.getNew();
+        var swtsToPost = JSON.stringify(audioSwtr.storeCollection.getNew());
         audioSwtr.storeCollection.post(swtsToPost);
         //TODO: after posting data, need to render view
         $(event.currentTarget).find('.feed-data').html(++data);
