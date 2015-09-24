@@ -45,7 +45,7 @@
   var AudioAnnoSwt = Backbone.Model.extend({
     defaults: {
       'who': '',
-      'what': 'audio-tagger',
+      'what': '',
       'where': '',
       'how': {}
     },
@@ -203,7 +203,7 @@
     swtrBuild: function() {
         var swt = [{
             who: audioSwtr.who,
-            what: 'audio-tagger',
+            what: audioSwtr.allowedContexts,
             where: this.model.get('url'),
             how: {tags: this.newTags}
         }];
@@ -249,7 +249,7 @@
             //for users who have liked alread
             var swt = [{
                 who: audioSwtr.who,
-                what: 'audio-tagger',
+                what: audioSwtr.allowedContexts,
                 where: audioModel.get('url'),
                 how: {like: true}
             }];
@@ -426,10 +426,10 @@ var dashboardview = Backbone.View.extend({
             var audioModel = this.collection.get($(event.currentTarget).data("id"));
             //TODO: Bug: one user can send multiple like sweets for one audio
             //dom won't refresh(as required) - Swts get posted(should check
-            //for users who have liked alread
+            //for users who have liked already
             var swt = [{
                 who: audioSwtr.who,
-                what: 'audio-tagger',
+                what: audioSwtr.allowedContexts,
                 where: audioModel.get('url'),
                 how: {like: true}
             }];
@@ -442,8 +442,10 @@ var dashboardview = Backbone.View.extend({
             $(event.currentTarget).attr('data-like', data);
             console.log("like", data);
         }
+        else {
         this.$el.find('.alert').remove();
         this.$el.prepend(this.alertsTemplate({message: "You need to Sign In" }));
+        }
     },
     shareClick: function(event) {
         var data = $(event.currentTarget).data('forward');
@@ -458,7 +460,7 @@ var dashboardview = Backbone.View.extend({
         var audioModel = this.collection.get($(event.currentTarget).data("id"));
         var swt = [{
             who: audioSwtr.who,
-            what: 'audio-tagger',
+            what: audioSwtr.allowedContexts,
             where: audioModel.get('url'),
             how: {dislike: true}
         }];
@@ -602,7 +604,7 @@ var appview = Backbone.View.extend({
     },
     getSweets: function() {
         audioSwtr.storeCollection.getAll({
-            what: 'audio-tagger',
+            what: audioSwtr.allowedContexts,
             where: null,
             success: function(data) {
                 audioSwtr.storeCollection.add(data);
